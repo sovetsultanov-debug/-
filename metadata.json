@@ -1,0 +1,6 @@
+{
+  "name": "Claude Code Science & Programming Skills Studio",
+  "description": "Production-ready Claude Code skill generator, catalog, and interactive workbench for bioscience, bioinformatics, and scientific programming with 3D structural analysis and live API testing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
