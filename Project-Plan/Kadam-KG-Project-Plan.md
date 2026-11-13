@@ -150,12 +150,45 @@ flowchart LR
 
 ### Class Diagram (схема базы)
 
+**Пользователи, роли и права**
+
 ```mermaid
 erDiagram
   USERS ||--o{ USER_ROLES : has
   ROLES ||--o{ USER_ROLES : assigned
   ROLES ||--o{ ROLE_PERMISSIONS : grants
   PERMISSIONS ||--o{ ROLE_PERMISSIONS : included
+
+  USERS {
+    uuid id PK
+    text phone
+    text email
+    text name
+    timestamptz created_at
+  }
+  USER_ROLES {
+    uuid user_id FK
+    int role_id FK
+    uuid business_id FK "null = глобальная роль"
+  }
+  ROLES {
+    int id PK
+    text code "owner|staff|client|admin"
+  }
+  ROLE_PERMISSIONS {
+    int role_id FK
+    int permission_id FK
+  }
+  PERMISSIONS {
+    int id PK
+    text code "services.edit, bookings.read_own ..."
+  }
+```
+
+**Бизнесы, услуги и записи**
+
+```mermaid
+erDiagram
   BUSINESSES ||--o{ SERVICES : offers
   BUSINESSES ||--o{ STAFF : employs
   USERS ||--o{ STAFF : works_as
@@ -163,15 +196,42 @@ erDiagram
   SERVICES ||--o{ BOOKINGS : for
   STAFF ||--o{ BOOKINGS : serves
 
-  USERS { uuid id PK; text phone; text email; text name; timestamptz created_at }
-  ROLES { int id PK; text code "owner|staff|client|admin" }
-  PERMISSIONS { int id PK; text code "services.edit, bookings.read_own ..." }
-  USER_ROLES { uuid user_id FK; int role_id FK; uuid business_id FK "null = глобальная роль" }
-  ROLE_PERMISSIONS { int role_id FK; int permission_id FK }
-  BUSINESSES { uuid id PK; text slug; text name; text category; text address; uuid owner_id FK }
-  SERVICES { uuid id PK; uuid business_id FK; text name; int price; int duration_min }
-  STAFF { uuid id PK; uuid business_id FK; uuid user_id FK; jsonb work_hours }
-  BOOKINGS { uuid id PK; uuid client_id FK; uuid service_id FK; uuid staff_id FK; timestamptz starts_at; text status }
+  BUSINESSES {
+    uuid id PK
+    text slug
+    text name
+    text category
+    text address
+    uuid owner_id FK
+  }
+  SERVICES {
+    uuid id PK
+    uuid business_id FK
+    text name
+    int price
+    int duration_min
+  }
+  STAFF {
+    uuid id PK
+    uuid business_id FK
+    uuid user_id FK
+    jsonb work_hours
+  }
+  USERS {
+    uuid id PK
+    text phone
+    text email
+    text name
+    timestamptz created_at
+  }
+  BOOKINGS {
+    uuid id PK
+    uuid client_id FK
+    uuid service_id FK
+    uuid staff_id FK
+    timestamptz starts_at
+    text status
+  }
 ```
 
 > Роль не хранится строкой в `users.role`: у человека может быть несколько ролей
