@@ -1,4 +1,4 @@
-# Стек BatTap: 11 тем с практикой
+# Стек Kadam KG: 11 тем с практикой
 
 У каждой темы: что это, зачем нам, типичная ошибка и задания. Отмечайте `[x]` выполненное
 прямо в этом файле через Pull Request.
@@ -16,7 +16,7 @@
 
 > ⚠️ **Ошибка:** хранить роль строкой в `users.role`. Тогда у человека не может быть двух ролей.
 
-- [ ] Нарисовать схему BatTap в dbdiagram.io: businesses, users, roles, services, bookings.
+- [ ] Нарисовать схему Kadam KG в dbdiagram.io: businesses, users, roles, services, bookings.
 - [ ] Создать таблицы в PostgreSQL миграциями, не руками.
 - [ ] Написать запрос «все записи на завтра у бизнеса X» с JOIN по трём таблицам.
 
@@ -26,7 +26,7 @@ PHP-фреймворк: роутинг, Eloquent, авторизация, миг
 
 > ⚠️ **Ошибка:** учить Laravel и Hono одновременно. Выберите один бэкенд.
 
-- [ ] `laravel new battap-api` и подключить PostgreSQL.
+- [ ] `laravel new kadam-api` и подключить PostgreSQL.
 - [ ] Миграция и модель `Business`.
 - [ ] Маршрут `GET /api/businesses/{slug}`.
 
@@ -70,7 +70,7 @@ PHP-фреймворк: роутинг, Eloquent, авторизация, миг
 - [ ] Ветка с изменением и её preview-ссылка.
 - [ ] Адрес API — переменная окружения в Vercel, а не в коде.
 
-### 7. DevTools и api.battap.app
+### 7. DevTools и api.kadam.kg
 
 Вкладка Network: каждый запрос, вес и время.
 
@@ -88,7 +88,7 @@ PHP-фреймворк: роутинг, Eloquent, авторизация, миг
 
 > ⚠️ **Ошибка:** «голый» React Native без Expo.
 
-- [ ] `npx create-expo-app battap`, запустить на телефоне через Expo Go.
+- [ ] `npx create-expo-app kadam`, запустить на телефоне через Expo Go.
 - [ ] Экран со списком бизнесов с данными из API.
 - [ ] Карточка с кнопкой «Записаться», которая создаёт бронь.
 
