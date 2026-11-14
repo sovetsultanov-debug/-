@@ -5,16 +5,25 @@ import 'leaflet/dist/leaflet.css';
 import {Maximize2, X} from 'lucide-react';
 import type {Route} from '../lib/route';
 import {useI18n} from '../i18n';
+import {useTheme, type Theme} from '../theme';
 
-const TILES = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+const TILES: Record<Theme, string> = {
+  cinema: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  silver: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+};
 const ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>';
 
-// One hue per day so multi-day routes read at a glance.
-const DAY_COLORS = ['#5eead4', '#818cf8', '#f0abfc', '#fcd34d', '#7dd3fc', '#fda4af', '#86efac'];
-const dayColor = (day: number) => DAY_COLORS[(day - 1) % DAY_COLORS.length];
+// One tone per day, from the crimson / off-white / black palette, so multi-day routes read at a glance.
+const DAY_COLORS: Record<Theme, [string, string][]> = {
+  cinema: [['#b3121f', '#f5f2ed'], ['#f5f2ed', '#0b0b0b'], ['#c9a46a', '#0b0b0b'], ['#e05561', '#0b0b0b'], ['#8f8983', '#0b0b0b'], ['#6e0a14', '#f5f2ed'], ['#d8d2ca', '#0b0b0b']],
+  silver: [['#8b0d1a', '#f5f2ed'], ['#0b0b0b', '#f5f2ed'], ['#8a6a32', '#f5f2ed'], ['#c4323e', '#f5f2ed'], ['#6a635c', '#f5f2ed'], ['#4a060d', '#f5f2ed'], ['#3a3532', '#f5f2ed']],
+};
+const ROUTE_LINE: Record<Theme, string> = {cinema: '#f5f2ed', silver: '#0b0b0b'};
+const pal = (theme: Theme, day: number) => DAY_COLORS[theme][(day - 1) % DAY_COLORS[theme].length];
 
 function MapView({route, interactive, focus}: {route: Route; interactive: boolean; focus: number | null}) {
+  const {theme} = useTheme();
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
   const markers = useRef<L.Marker[]>([]);
@@ -29,16 +38,16 @@ function MapView({route, interactive, focus}: {route: Route; interactive: boolea
       worldCopyJump: true,
     });
     m.attributionControl.setPrefix(false);
-    L.tileLayer(TILES, {attribution: ATTRIBUTION, subdomains: 'abcd', maxZoom: 19, detectRetina: true}).addTo(m);
+    L.tileLayer(TILES[theme], {attribution: ATTRIBUTION, subdomains: 'abcd', maxZoom: 19, detectRetina: true}).addTo(m);
 
     const latlngs = route.stops.map((s) => L.latLng(s.lat, s.lng));
-    L.polyline(latlngs, {color: '#a5b4fc', weight: 3, opacity: 0.85, dashArray: '6 8'}).addTo(m);
+    L.polyline(latlngs, {color: ROUTE_LINE[theme], weight: 2.5, opacity: 0.7, dashArray: '6 8'}).addTo(m);
     markers.current = route.stops.map((s, i) =>
       L.marker([s.lat, s.lng], {
         title: s.name,
         icon: L.divIcon({
           className: '',
-          html: `<span class="route-pin" style="--pin:${dayColor(s.day)}">${i + 1}</span>`,
+          html: `<span class="route-pin" style="--pin:${pal(theme, s.day)[0]};--pin-text:${pal(theme, s.day)[1]}">${i + 1}</span>`,
           iconSize: [28, 28],
           iconAnchor: [14, 14],
         }),
@@ -60,7 +69,7 @@ function MapView({route, interactive, focus}: {route: Route; interactive: boolea
       m.remove();
       map.current = null;
     };
-  }, [route, interactive]);
+  }, [route, interactive, theme]);
 
   useEffect(() => {
     if (focus === null || !map.current) return;
@@ -74,6 +83,7 @@ function MapView({route, interactive, focus}: {route: Route; interactive: boolea
 
 function StopList({route, onPick}: {route: Route; onPick: (i: number) => void}) {
   const {t} = useI18n();
+  const {theme} = useTheme();
   const days = useMemo(() => {
     const groups = new Map<number, {i: number; name: string}[]>();
     route.stops.forEach((s, i) => {
@@ -89,7 +99,8 @@ function StopList({route, onPick}: {route: Route; onPick: (i: number) => void}) 
       {days.map(([day, stops]) => (
         <li key={day}>
           {multiDay && (
-            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em]" style={{color: dayColor(day)}}>
+            <p className="mb-1.5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-fg/70">
+              <span className="size-2 rotate-45" style={{background: pal(theme, day)[0]}} />
               {t.day} {day}
             </p>
           )}
@@ -98,11 +109,11 @@ function StopList({route, onPick}: {route: Route; onPick: (i: number) => void}) 
               <li key={i}>
                 <button
                   onClick={() => onPick(i)}
-                  className="ring-focus flex items-center gap-1.5 rounded-full bg-white/6 py-1 pe-3 ps-1 text-[13px] text-white/80 ring-1 ring-white/10 transition-colors hover:bg-white/12 hover:text-white"
+                  className="ring-focus flex items-center gap-1.5 rounded-full bg-fg/6 py-1 pe-3 ps-1 text-[13px] text-fg/80 ring-1 ring-fg/10 transition-colors hover:bg-fg/12 hover:text-fg"
                 >
                   <span
-                    className="grid size-5 place-items-center rounded-full text-[11px] font-bold text-ink"
-                    style={{background: dayColor(route.stops[i].day)}}
+                    className="grid size-5 place-items-center rounded-full text-[11px] font-bold"
+                    style={{background: pal(theme, route.stops[i].day)[0], color: pal(theme, route.stops[i].day)[1]}}
                   >
                     {i + 1}
                   </span>
@@ -133,18 +144,18 @@ export default function RouteMap({route}: {route: Route}) {
     <section className="glass rise mt-4 overflow-hidden rounded-[24px]" aria-label={t.routeMap}>
       <header className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-0">
-          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-white/45">{t.routeMap}</p>
-          {route.title && <p className="truncate text-[15px] font-semibold text-white">{route.title}</p>}
+          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-fg/45">{t.routeMap}</p>
+          {route.title && <p className="truncate text-[15px] font-semibold text-fg">{route.title}</p>}
         </div>
         <button
           onClick={() => setExpanded(true)}
-          className="ring-focus flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-white/8 px-3 text-sm text-white/85 transition-colors hover:bg-white/14"
+          className="ring-focus flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-fg/8 px-3 text-sm text-fg/85 transition-colors hover:bg-fg/14"
         >
           <Maximize2 className="size-3.5" />
           <span className="hidden sm:inline">{t.expandMap}</span>
         </button>
       </header>
-      <div className="h-[260px] border-y border-white/8 sm:h-[300px]">
+      <div className="h-[260px] border-y border-fg/8 sm:h-[300px]">
         {!expanded && <MapView route={route} interactive={false} focus={focus} />}
       </div>
       <div className="px-4 py-3.5">
@@ -153,20 +164,20 @@ export default function RouteMap({route}: {route: Route}) {
 
       {expanded &&
         createPortal(
-        <div role="dialog" aria-modal="true" aria-label={route.title || t.routeMap} className="fixed inset-0 z-[70] flex flex-col bg-ink/80 p-2 backdrop-blur-md sm:p-5">
+        <div role="dialog" aria-modal="true" aria-label={route.title || t.routeMap} className="fixed inset-0 z-[70] flex flex-col bg-bg/85 p-2 backdrop-blur-md sm:p-5">
           <div className="glass-strong relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] lg:flex-row">
             <div className="relative min-h-0 flex-1">
               <MapView route={route} interactive focus={focus} />
               <button
                 onClick={() => setExpanded(false)}
                 aria-label={t.close}
-                className="glass-strong ring-focus absolute end-3 top-3 z-[500] grid size-11 place-items-center rounded-full text-white"
+                className="glass-strong ring-focus absolute end-3 top-3 z-[500] grid size-11 place-items-center rounded-full text-fg"
               >
                 <X className="size-5" />
               </button>
             </div>
-            <aside className="scroll-thin max-h-[38vh] overflow-y-auto border-t border-white/8 p-4 lg:max-h-none lg:w-80 lg:border-s lg:border-t-0">
-              {route.title && <p className="mb-3 text-lg font-semibold text-white">{route.title}</p>}
+            <aside className="scroll-thin max-h-[38vh] overflow-y-auto border-t border-fg/8 p-4 lg:max-h-none lg:w-80 lg:border-s lg:border-t-0">
+              {route.title && <p className="mb-3 text-lg font-semibold text-fg">{route.title}</p>}
               <StopList route={route} onPick={setFocus} />
             </aside>
           </div>

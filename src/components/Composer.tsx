@@ -37,7 +37,7 @@ export function Composer({value, onChange, onSend, onStop, streaming}: Props) {
   const canSend = value.trim().length > 0;
 
   return (
-    <form onSubmit={submit} className="glass flex items-end gap-2 rounded-[28px] p-2 ps-5 focus-within:border-white/25">
+    <form onSubmit={submit} className="glass flex items-end gap-2 rounded-[28px] p-2 ps-5 focus-within:border-fg/25">
       <textarea
         ref={ref}
         rows={1}
@@ -46,7 +46,7 @@ export function Composer({value, onChange, onSend, onStop, streaming}: Props) {
         onKeyDown={onKeyDown}
         placeholder={t.placeholder}
         aria-label={t.placeholder}
-        className="scroll-thin max-h-[200px] min-h-[44px] flex-1 resize-none bg-transparent py-2.5 text-[16px] leading-6 text-white placeholder:text-white/40 focus:outline-none"
+        className="scroll-thin max-h-[200px] min-h-[44px] flex-1 resize-none bg-transparent py-2.5 text-[16px] leading-6 text-fg placeholder:text-fg/40 focus:outline-none"
       />
       {streaming ? (
         <button
@@ -54,7 +54,7 @@ export function Composer({value, onChange, onSend, onStop, streaming}: Props) {
           onClick={onStop}
           aria-label={t.stop}
           title={t.stop}
-          className="ring-focus grid size-11 shrink-0 place-items-center rounded-full bg-white text-ink transition-transform active:scale-95"
+          className="ring-focus grid size-11 shrink-0 place-items-center rounded-full bg-fg text-bg transition-transform active:scale-95"
         >
           <Square className="size-3.5 fill-current" />
         </button>
@@ -64,7 +64,7 @@ export function Composer({value, onChange, onSend, onStop, streaming}: Props) {
           disabled={!canSend}
           aria-label={t.send}
           title={t.send}
-          className="bg-accent ring-focus grid size-11 shrink-0 place-items-center rounded-full text-ink shadow-[0_8px_24px_-8px_rgb(129_140_248/0.9)] transition-[transform,opacity,filter] hover:brightness-110 active:scale-95 disabled:opacity-30 disabled:shadow-none"
+          className="bg-accent ring-focus grid size-11 shrink-0 place-items-center rounded-full text-on-accent shadow-[0_8px_24px_-8px_var(--c-accent-glow)] transition-[transform,opacity,filter] hover:brightness-110 active:scale-95 disabled:opacity-30 disabled:shadow-none"
         >
           <ArrowUp className="size-5" strokeWidth={2.5} />
         </button>

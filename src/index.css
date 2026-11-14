@@ -1,20 +1,99 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource/oswald/500.css";
+@import "@fontsource/oswald/600.css";
+@import "@fontsource/oswald/700.css";
+
+/*
+ * Two themes, both driven by the --c-* tokens below.
+ *  - "cinema" (default, dark): black #0B0B0B, crimson #8B0D1A and off-white #F5F2ED,
+ *    film grain, crimson glow at the edges, HUD hairlines, halftone poster lettering.
+ *  - "silver" (light, "paper"): off-white paper, black type, the same crimson.
+ * Components only use the semantic utilities generated in @theme (text-fg, bg-fg/10,
+ * bg-accent, text-gold…), so switching data-theme on <html> restyles everything.
+ */
 
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI",
-    "Noto Sans", "Noto Sans Arabic", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
-  --color-ink: #05060b;
-  --color-aqua: #5eead4;
-  --color-iris: #818cf8;
-  --color-sun: #fcd34d;
+  --font-sans: "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    "Noto Sans Arabic", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-display: "Oswald", "Inter Variable", "Noto Sans Arabic", "PingFang SC", system-ui, sans-serif;
+
+  --color-bg: var(--c-bg);
+  --color-fg: var(--c-fg);
+  --color-muted: var(--c-muted);
+  --color-accent: var(--c-accent);
+  --color-on-accent: var(--c-on-accent);
+  --color-gold: var(--c-gold);
+  --color-danger: var(--c-danger);
+  --color-panel: var(--c-panel);
+  --color-crimson: var(--c-crimson);
 }
 
-:root {
+:root,
+:root[data-theme="cinema"] {
   color-scheme: dark;
-  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.085), rgb(255 255 255 / 0.035));
-  --glass-border: rgb(255 255 255 / 0.11);
-  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.12), inset 0 -1px 0 rgb(255 255 255 / 0.03);
-  --accent: linear-gradient(135deg, #5eead4 0%, #818cf8 55%, #c084fc 100%);
+  --c-bg: #0b0b0b;
+  --c-bg-2: #141212;
+  --c-fg: #f5f2ed;
+  --c-muted: #8f8983;
+  --c-accent: #b3121f;
+  --c-crimson: #8b0d1a;
+  --c-accent-glow: rgb(179 18 31 / 0.55);
+  --c-on-accent: #f5f2ed;
+  --c-gold: #c9a46a;
+  --c-danger: #ff8a80;
+  --c-panel: #141313;
+
+  --glass-bg: linear-gradient(180deg, rgb(245 242 237 / 0.06), rgb(245 242 237 / 0.02));
+  --glass-border: rgb(245 242 237 / 0.11);
+  --glass-highlight: inset 0 1px 0 rgb(245 242 237 / 0.07);
+  --glass-shadow: 0 24px 60px -24px rgb(0 0 0 / 0.85);
+  --glass-strong-bg: linear-gradient(180deg, rgb(22 20 20 / 0.92), rgb(11 11 11 / 0.9));
+  --band: linear-gradient(90deg, transparent, rgb(245 242 237 / 0.07) 20%, rgb(245 242 237 / 0.12) 50%, rgb(245 242 237 / 0.07) 80%, transparent);
+  --ridge-far: #1a1617;
+  --ridge-mid: #121011;
+  --ridge-near: #0b0b0b;
+  --glow: radial-gradient(60% 55% at 85% 0%, rgb(139 13 26 / 0.55), transparent 70%),
+    radial-gradient(45% 50% at 0% 100%, rgb(139 13 26 / 0.35), transparent 70%);
+  --grain-opacity: 0.12;
+  --headline-fill: linear-gradient(180deg, #f5f2ed 0%, #d8d2ca 40%, rgb(245 242 237 / 0.15) 100%);
+  --hud: rgb(245 242 237 / 0.28);
+  --photo-filter: grayscale(1) contrast(1.15) brightness(0.5);
+  --hero-glow: radial-gradient(70% 60% at 82% 18%, rgb(139 13 26 / 0.7), transparent 70%), radial-gradient(50% 45% at 0% 100%, rgb(139 13 26 / 0.35), transparent 70%);
+  --photo-blend: normal;
+}
+
+:root[data-theme="silver"] {
+  color-scheme: light;
+  --c-bg: #f5f2ed;
+  --c-bg-2: #ebe6df;
+  --c-fg: #0b0b0b;
+  --c-muted: #6a635c;
+  --c-accent: #8b0d1a;
+  --c-crimson: #8b0d1a;
+  --c-accent-glow: rgb(139 13 26 / 0.35);
+  --c-on-accent: #f5f2ed;
+  --c-gold: #8a6a32;
+  --c-danger: #a1121e;
+  --c-panel: #fbf9f6;
+
+  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0.5));
+  --glass-border: rgb(11 11 11 / 0.1);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --glass-shadow: 0 20px 50px -26px rgb(60 30 20 / 0.35);
+  --glass-strong-bg: linear-gradient(180deg, rgb(251 249 246 / 0.97), rgb(245 242 237 / 0.95));
+  --band: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.5) 20%, rgb(255 255 255 / 0.8) 50%, rgb(255 255 255 / 0.5) 80%, transparent);
+  --ridge-far: #d8d1c8;
+  --ridge-mid: #c9c0b5;
+  --ridge-near: #e6e0d8;
+  --glow: radial-gradient(60% 55% at 85% 0%, rgb(139 13 26 / 0.12), transparent 70%),
+    radial-gradient(45% 50% at 0% 100%, rgb(139 13 26 / 0.08), transparent 70%);
+  --grain-opacity: 0.06;
+  --headline-fill: linear-gradient(180deg, #0b0b0b 0%, #2b2523 45%, rgb(11 11 11 / 0.12) 100%);
+  --hud: rgb(11 11 11 / 0.3);
+  --photo-filter: grayscale(1) contrast(1.05) brightness(1.03);
+  --hero-glow: radial-gradient(60% 55% at 82% 18%, rgb(139 13 26 / 0.14), transparent 70%), radial-gradient(45% 40% at 0% 100%, rgb(139 13 26 / 0.08), transparent 70%);
+  --photo-blend: multiply;
 }
 
 html,
@@ -25,90 +104,137 @@ body,
 
 body {
   margin: 0;
-  background: var(--color-ink);
-  color: rgb(255 255 255 / 0.92);
+  background: var(--c-bg);
+  color: var(--c-fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {
-  background: rgb(129 140 248 / 0.4);
+  background: var(--c-accent);
+  color: var(--c-on-accent);
 }
 
-/* ---------- Glass ---------- */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* ---------- Glass (smoked in cinema, frosted white in silver) ---------- */
 .glass {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-highlight), 0 24px 60px -24px rgb(0 0 0 / 0.65);
-  backdrop-filter: blur(28px) saturate(170%);
-  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
 }
 
 .glass-strong {
-  background: linear-gradient(180deg, rgb(22 24 38 / 0.82), rgb(12 13 22 / 0.78));
+  background: var(--glass-strong-bg);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-highlight), 0 30px 80px -20px rgb(0 0 0 / 0.75);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+  backdrop-filter: blur(36px) saturate(150%);
+  -webkit-backdrop-filter: blur(36px) saturate(150%);
 }
 
 .glass-hover {
   transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 .glass-hover:hover {
-  background-color: rgb(255 255 255 / 0.05);
-  border-color: rgb(255 255 255 / 0.18);
+  border-color: color-mix(in srgb, var(--c-fg) 22%, transparent);
 }
 
+/* Metallic headline lettering */
 .text-gradient {
-  background: linear-gradient(120deg, #ffffff 10%, #c7d2fe 45%, #99f6e4 90%);
+  background: var(--headline-fill);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.bg-accent {
-  background: var(--accent);
-}
-
 .ring-focus:focus-visible {
-  outline: 2px solid rgb(129 140 248 / 0.9);
+  outline: 2px solid var(--c-accent);
   outline-offset: 2px;
 }
 
-/* ---------- Aurora background ---------- */
-.aurora {
+/* ---------- Film grain ---------- */
+.grain {
   position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  opacity: 0.55;
-  will-change: transform;
+  inset: -50%;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  animation: grain 1.2s steps(6) infinite;
 }
-@keyframes drift-a {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(6vw, 4vh, 0) scale(1.12); }
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
 }
-@keyframes drift-b {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
-  50% { transform: translate3d(-5vw, -3vh, 0) scale(0.95); }
+
+/* Halftone dots inside poster lettering (the "KING" look) */
+.halftone {
+  -webkit-mask-image: radial-gradient(circle, #000 0.9px, transparent 1.25px);
+  mask-image: radial-gradient(circle, #000 0.9px, transparent 1.25px);
+  -webkit-mask-size: 4px 4px;
+  mask-size: 4px 4px;
 }
-@keyframes twinkle {
-  0%, 100% { opacity: 0.25; }
-  50% { opacity: 0.9; }
+
+/* HUD hairline frame with corner ticks */
+.hud-frame {
+  position: absolute;
+  inset: 14px;
+  pointer-events: none;
+  border: 1px solid var(--hud);
+  -webkit-mask: linear-gradient(#000 0 0) top left / 22px 22px no-repeat, linear-gradient(#000 0 0) top right / 22px 22px no-repeat,
+    linear-gradient(#000 0 0) bottom left / 22px 22px no-repeat, linear-gradient(#000 0 0) bottom right / 22px 22px no-repeat;
+  mask: linear-gradient(#000 0 0) top left / 22px 22px no-repeat, linear-gradient(#000 0 0) top right / 22px 22px no-repeat,
+    linear-gradient(#000 0 0) bottom left / 22px 22px no-repeat, linear-gradient(#000 0 0) bottom right / 22px 22px no-repeat;
 }
-.drift-a { animation: drift-a 22s ease-in-out infinite; }
-.drift-b { animation: drift-b 28s ease-in-out infinite; }
-.star { animation: twinkle 4s ease-in-out infinite; }
+
+.hud-label {
+  font: 500 10.5px/1.2 var(--font-sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+}
+
+/* Pale diagonal band across the scene */
+.band {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  height: 34vh;
+  background: var(--band);
+  transform: rotate(-24deg);
+  filter: blur(2px);
+}
 
 /* ---------- Motion ---------- */
 @keyframes rise {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: none; }
 }
-.rise { animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.rise { animation: rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes sun-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: none; }
+}
+.sun-in { animation: sun-in 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-2.5%); }
+}
+.fog-drift { animation: drift 30s ease-in-out infinite; }
 
 @keyframes dot {
   0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
@@ -127,51 +253,52 @@ body {
   margin-inline-start: 2px;
   vertical-align: -0.15em;
   border-radius: 2px;
-  background: var(--accent);
+  background: var(--c-accent);
   animation: caret 1s steps(1) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .drift-a, .drift-b, .star, .rise, .typing-dot, .stream-caret::after { animation: none !important; }
+  .grain, .rise, .sun-in, .fog-drift, .typing-dot, .stream-caret::after { animation: none !important; }
 }
 
 /* ---------- Scrollbars ---------- */
-.scroll-thin { scrollbar-width: thin; scrollbar-color: rgb(255 255 255 / 0.15) transparent; }
+.scroll-thin { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--c-fg) 18%, transparent) transparent; }
 .scroll-thin::-webkit-scrollbar { width: 8px; }
-.scroll-thin::-webkit-scrollbar-thumb { background: rgb(255 255 255 / 0.12); border-radius: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--c-fg) 15%, transparent); border-radius: 8px; }
 
 /* ---------- Markdown answer ---------- */
-.prose-trip { line-height: 1.7; font-size: 15.5px; color: rgb(255 255 255 / 0.86); overflow-wrap: anywhere; }
+.prose-trip { line-height: 1.7; font-size: 15.5px; color: color-mix(in srgb, var(--c-fg) 86%, transparent); overflow-wrap: anywhere; }
 .prose-trip > * + * { margin-top: 0.75em; }
 .prose-trip h1, .prose-trip h2, .prose-trip h3 {
-  color: #fff;
-  font-weight: 650;
-  letter-spacing: -0.01em;
+  color: var(--c-fg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.005em;
   line-height: 1.3;
   margin-top: 1.4em;
 }
-.prose-trip h1 { font-size: 1.35em; }
-.prose-trip h2 { font-size: 1.2em; }
-.prose-trip h3 { font-size: 1.05em; }
+.prose-trip h1 { font-size: 1.25em; }
+.prose-trip h2 { font-size: 1.08em; }
+.prose-trip h3 { font-size: 0.98em; }
 .prose-trip > :first-child { margin-top: 0; }
-.prose-trip strong { color: #fff; font-weight: 600; }
-.prose-trip a { color: #99f6e4; text-decoration: underline; text-underline-offset: 3px; }
+.prose-trip strong { color: var(--c-fg); font-weight: 650; }
+.prose-trip a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; }
 .prose-trip ul, .prose-trip ol { padding-inline-start: 1.3em; }
 .prose-trip ul { list-style: disc; }
 .prose-trip ol { list-style: decimal; }
 .prose-trip li + li { margin-top: 0.3em; }
-.prose-trip li::marker { color: rgb(153 246 228 / 0.7); }
-.prose-trip hr { border: 0; height: 1px; background: rgb(255 255 255 / 0.1); margin: 1.5em 0; }
+.prose-trip li::marker { color: var(--c-accent); }
+.prose-trip hr { border: 0; height: 1px; background: color-mix(in srgb, var(--c-fg) 12%, transparent); margin: 1.5em 0; }
 .prose-trip blockquote {
-  border-inline-start: 3px solid rgb(129 140 248 / 0.6);
+  border-inline-start: 3px solid var(--c-gold);
   padding-inline-start: 1em;
-  color: rgb(255 255 255 / 0.7);
+  color: color-mix(in srgb, var(--c-fg) 70%, transparent);
 }
 .prose-trip code {
   font-size: 0.88em;
   padding: 0.15em 0.4em;
   border-radius: 6px;
-  background: rgb(255 255 255 / 0.08);
+  background: color-mix(in srgb, var(--c-fg) 8%, transparent);
 }
 .prose-trip table {
   display: block;
@@ -180,27 +307,27 @@ body {
   font-size: 0.92em;
 }
 .prose-trip th, .prose-trip td {
-  border: 1px solid rgb(255 255 255 / 0.1);
+  border: 1px solid color-mix(in srgb, var(--c-fg) 12%, transparent);
   padding: 0.45em 0.75em;
   text-align: start;
 }
-.prose-trip th { background: rgb(255 255 255 / 0.05); color: #fff; font-weight: 600; }
+.prose-trip th { background: color-mix(in srgb, var(--c-fg) 5%, transparent); color: var(--c-fg); font-weight: 600; }
 
 /* ---------- Route map (Leaflet) ---------- */
-.route-map.leaflet-container { background: #0b0d16; font-family: var(--font-sans); }
+.route-map.leaflet-container { background: var(--c-panel); font-family: var(--font-sans); }
 .route-map.leaflet-container .leaflet-control-attribution {
-  background: rgb(5 6 11 / 0.6);
-  color: rgb(255 255 255 / 0.5);
+  background: color-mix(in srgb, var(--c-bg) 70%, transparent);
+  color: var(--c-muted);
   font-size: 10px;
   backdrop-filter: blur(6px);
 }
-.route-map.leaflet-container .leaflet-control-attribution a { color: rgb(255 255 255 / 0.7); }
+.route-map.leaflet-container .leaflet-control-attribution a { color: var(--c-fg); }
 .route-map .leaflet-bar a {
-  background: rgb(22 24 38 / 0.9);
-  color: #fff;
-  border-color: rgb(255 255 255 / 0.1);
+  background: var(--c-panel);
+  color: var(--c-fg);
+  border-color: var(--glass-border);
 }
-.route-map .leaflet-bar a:hover { background: rgb(40 44 66 / 0.95); }
+.route-map .leaflet-bar a:hover { background: var(--c-bg-2); }
 .route-pin {
   display: grid;
   place-items: center;
@@ -208,17 +335,17 @@ body {
   height: 28px;
   border-radius: 9999px;
   background: var(--pin);
-  color: #05060b;
+  color: var(--pin-text, #0a0a0b);
   font: 700 12px/1 var(--font-sans);
-  border: 2px solid rgb(5 6 11 / 0.85);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pin) 35%, transparent), 0 6px 16px rgb(0 0 0 / 0.5);
+  border: 2px solid var(--c-bg);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pin) 35%, transparent), 0 6px 16px rgb(0 0 0 / 0.45);
 }
 .leaflet-tooltip.route-tip {
-  background: rgb(18 20 32 / 0.95);
-  color: #fff;
-  border: 1px solid rgb(255 255 255 / 0.12);
+  background: var(--c-panel);
+  color: var(--c-fg);
+  border: 1px solid var(--glass-border);
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgb(0 0 0 / 0.5);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
   font: 500 12.5px var(--font-sans);
 }
-.leaflet-tooltip-top.route-tip::before { border-top-color: rgb(18 20 32 / 0.95); }
+.leaflet-tooltip-top.route-tip::before { border-top-color: var(--c-panel); }

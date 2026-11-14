@@ -29,9 +29,9 @@ export function LanguageMenu() {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t.language}
-        className="glass glass-hover ring-focus flex h-10 items-center gap-2 rounded-full px-3.5 text-sm text-white/85"
+        className="glass glass-hover ring-focus flex h-10 items-center gap-2 rounded-full px-3.5 text-sm text-fg/85"
       >
-        <Globe className="size-4 text-white/70" />
+        <Globe className="size-4 text-fg/70" />
         <span className="hidden sm:inline">{LOCALE_META[locale].name}</span>
         <span className="uppercase sm:hidden">{locale}</span>
       </button>
@@ -52,10 +52,10 @@ export function LanguageMenu() {
                   setLocale(l);
                   setOpen(false);
                 }}
-                className="ring-focus flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-start text-sm text-white/85 transition-colors hover:bg-white/8"
+                className="ring-focus flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-start text-sm text-fg/85 transition-colors hover:bg-fg/8"
               >
                 <span>{LOCALE_META[l].name}</span>
-                {l === locale && <Check className="size-4 text-aqua" />}
+                {l === locale && <Check className="size-4 text-gold" />}
               </button>
             </li>
           ))}

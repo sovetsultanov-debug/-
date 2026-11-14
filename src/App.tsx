@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {Menu, UserRound} from 'lucide-react';
+import {Menu, Moon, Sun, UserRound} from 'lucide-react';
 import type {User} from '@supabase/supabase-js';
 import {Background} from './components/Background';
 import {Sidebar} from './components/Sidebar';
@@ -10,6 +10,7 @@ import {EmptyState} from './components/EmptyState';
 import {MessageList} from './components/MessageList';
 import {Wordmark} from './components/Logo';
 import {useI18n} from './i18n';
+import {useTheme} from './theme';
 import type {Dict} from './i18n/locales';
 import {supabase} from './lib/supabase';
 import {apiJson, ChatError, fetchHealth, streamChat} from './lib/api';
@@ -47,6 +48,7 @@ function errorText(code: ChatErrorCode, t: Dict): string {
 
 export default function App() {
   const {t, locale} = useI18n();
+  const {theme, toggle: toggleTheme} = useTheme();
 
   const [user, setUser] = useState<User | null>(null);
   const [chats, setChats] = useState<ChatSummary[]>([]);
@@ -285,20 +287,28 @@ export default function App() {
               aria-label={t.menu}
               className="glass glass-hover ring-focus grid size-10 place-items-center rounded-full lg:hidden"
             >
-              <Menu className="size-5 text-white/80" />
+              <Menu className="size-5 text-fg/80" />
             </button>
             <div className="hidden sm:block lg:hidden">
               <Wordmark />
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              aria-label={t.themeToggle}
+              title={t.themeToggle}
+              className="glass glass-hover ring-focus grid size-10 place-items-center rounded-full"
+            >
+              {theme === 'cinema' ? <Sun className="size-4.5 text-fg/80" /> : <Moon className="size-4.5 text-fg/80" />}
+            </button>
             <LanguageMenu />
             {!user && (
               <button
                 onClick={() => setAuthOpen('default')}
-                className="glass glass-hover ring-focus flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium text-white lg:hidden"
+                className="glass glass-hover ring-focus flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium text-fg lg:hidden"
               >
-                <UserRound className="size-4 text-white/70" />
+                <UserRound className="size-4 text-fg/70" />
                 {t.signIn}
               </button>
             )}
@@ -321,7 +331,7 @@ export default function App() {
         <div className="px-3 pb-[max(12px,env(safe-area-inset-bottom))] pt-2 sm:px-6">
           <div className="mx-auto w-full max-w-3xl">
             {!aiReady && empty && (
-              <p role="status" className="glass mb-3 rounded-2xl px-4 py-2.5 text-center text-sm text-amber-100/90">
+              <p role="status" className="glass mb-3 rounded-2xl px-4 py-2.5 text-center text-sm text-gold">
                 {t.errAiNotConfigured}
               </p>
             )}
@@ -332,7 +342,7 @@ export default function App() {
               onStop={() => abortRef.current?.abort()}
               streaming={streamingId !== null}
             />
-            <p className="mt-2 text-center text-xs text-white/50">{t.disclaimer}</p>
+            <p className="mt-2 text-center text-xs text-fg/50">{t.disclaimer}</p>
           </div>
         </div>
       </main>

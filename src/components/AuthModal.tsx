@@ -64,27 +64,27 @@ export function AuthModal({onClose, reason = 'default'}: {onClose: () => void; r
           type="button"
           onClick={onClose}
           aria-label={t.close}
-          className="ring-focus absolute end-4 top-4 grid size-9 place-items-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+          className="ring-focus absolute end-4 top-4 grid size-9 place-items-center rounded-full text-fg/60 transition-colors hover:bg-fg/10 hover:text-fg"
         >
           <X className="size-5" />
         </button>
         <div className="flex flex-col items-center text-center">
           <LogoMark size={52} />
-          <h2 id="auth-title" className="mt-4 text-2xl font-semibold tracking-tight text-white">
+          <h2 id="auth-title" className="mt-4 text-2xl font-semibold tracking-tight text-fg">
             {title}
           </h2>
-          {reason === 'chat' && <p className="mt-2 text-[15px] font-medium text-aqua">{t.signInToChat}</p>}
-          <p className="mt-1.5 text-sm leading-relaxed text-white/55">{t.authSubtitle}</p>
+          {reason === 'chat' && <p className="mt-2 text-[15px] font-medium text-gold">{t.signInToChat}</p>}
+          <p className="mt-1.5 text-sm leading-relaxed text-fg/55">{t.authSubtitle}</p>
         </div>
 
         {!supabase ? (
-          <p className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/75">
+          <p className="mt-6 rounded-2xl border border-fg/10 bg-fg/5 p-4 text-sm text-fg/75">
             {t.authNotConfigured}
           </p>
         ) : (
           <form onSubmit={submit} className="mt-6 space-y-3">
-            <label className="glass flex items-center gap-3 rounded-2xl px-4 focus-within:border-iris/60">
-              <Mail className="size-4 shrink-0 text-white/45" />
+            <label className="glass flex items-center gap-3 rounded-2xl px-4 focus-within:border-accent/70">
+              <Mail className="size-4 shrink-0 text-fg/45" />
               <input
                 type="email"
                 required
@@ -93,11 +93,11 @@ export function AuthModal({onClose, reason = 'default'}: {onClose: () => void; r
                 aria-label={t.email}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-12 w-full bg-transparent text-[15px] text-white placeholder:text-white/40 focus:outline-none"
+                className="h-12 w-full bg-transparent text-[15px] text-fg placeholder:text-fg/40 focus:outline-none"
               />
             </label>
-            <label className="glass flex items-center gap-3 rounded-2xl px-4 focus-within:border-iris/60">
-              <Lock className="size-4 shrink-0 text-white/45" />
+            <label className="glass flex items-center gap-3 rounded-2xl px-4 focus-within:border-accent/70">
+              <Lock className="size-4 shrink-0 text-fg/45" />
               <input
                 type="password"
                 required
@@ -107,23 +107,23 @@ export function AuthModal({onClose, reason = 'default'}: {onClose: () => void; r
                 aria-label={t.password}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-12 w-full bg-transparent text-[15px] text-white placeholder:text-white/40 focus:outline-none"
+                className="h-12 w-full bg-transparent text-[15px] text-fg placeholder:text-fg/40 focus:outline-none"
               />
             </label>
             {error && (
-              <p role="alert" className="px-1 text-sm text-rose-300">
+              <p role="alert" className="px-1 text-sm text-danger">
                 {error}
               </p>
             )}
             {info && (
-              <p role="status" className="px-1 text-sm text-aqua">
+              <p role="status" className="px-1 text-sm text-gold">
                 {info}
               </p>
             )}
             <button
               type="submit"
               disabled={busy}
-              className="bg-accent ring-focus flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-[15px] font-semibold text-ink shadow-[0_10px_30px_-10px_rgb(129_140_248/0.8)] transition-[filter,transform] hover:brightness-110 active:scale-[0.99] disabled:opacity-60"
+              className="bg-accent ring-focus flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-[15px] font-semibold text-on-accent shadow-[0_10px_30px_-10px_var(--c-accent-glow)] transition-[filter,transform] hover:brightness-110 active:scale-[0.99] disabled:opacity-60"
             >
               {busy && <Loader2 className="size-4 animate-spin" />}
               {mode === 'in' ? t.submitIn : t.submitUp}
@@ -135,7 +135,7 @@ export function AuthModal({onClose, reason = 'default'}: {onClose: () => void; r
                 setError(null);
                 setInfo(null);
               }}
-              className="ring-focus w-full rounded-xl py-2 text-sm text-white/65 transition-colors hover:text-white"
+              className="ring-focus w-full rounded-xl py-2 text-sm text-fg/65 transition-colors hover:text-fg"
             >
               {mode === 'in' ? t.toSignUp : t.toSignIn}
             </button>

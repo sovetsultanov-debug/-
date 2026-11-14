@@ -91,13 +91,13 @@ export function AdminApp() {
 
   let body: ReactNode;
   if (!ready || (user && access === 'checking')) {
-    body = <Centered><Loader2 className="size-6 animate-spin text-white/60" /></Centered>;
+    body = <Centered><Loader2 className="size-6 animate-spin text-fg/60" /></Centered>;
   } else if (!supabase) {
     body = <Notice icon={<ShieldAlert />} title="Supabase не настроен" text="Задайте VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY при сборке." />;
   } else if (!user) {
     body = (
       <Notice icon={<ShieldCheck />} title="Вход для администратора" text="Войдите под аккаунтом, email которого указан в ADMIN_EMAILS.">
-        <button onClick={() => setAuthOpen(true)} className="bg-accent ring-focus mt-5 h-11 rounded-2xl px-6 text-sm font-semibold text-ink">
+        <button onClick={() => setAuthOpen(true)} className="bg-accent ring-focus mt-5 h-11 rounded-2xl px-6 text-sm font-semibold text-on-accent">
           Войти
         </button>
       </Notice>
@@ -126,7 +126,7 @@ export function AdminApp() {
               onClick={() => setTab(id)}
               aria-current={tab === id ? 'page' : undefined}
               className={`ring-focus flex h-10 items-center gap-2 rounded-xl px-3.5 text-sm font-medium transition-colors sm:px-4 ${
-                tab === id ? 'bg-white/12 text-white' : 'text-white/60 hover:text-white'
+                tab === id ? 'bg-fg/12 text-fg' : 'text-fg/60 hover:text-fg'
               }`}
             >
               <Icon className="size-4" />
@@ -148,10 +148,10 @@ export function AdminApp() {
         <header className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Wordmark />
-            <span className="rounded-full border border-aqua/30 bg-aqua/10 px-2.5 py-0.5 text-xs font-medium text-aqua">Админ</span>
+            <span className="rounded-full border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-medium uppercase tracking-[0.12em] text-fg">Админ</span>
           </div>
           <div className="flex items-center gap-2">
-            <a href="/" className="glass glass-hover ring-focus flex h-10 items-center gap-2 rounded-full px-4 text-sm text-white/85">
+            <a href="/" className="glass glass-hover ring-focus flex h-10 items-center gap-2 rounded-full px-4 text-sm text-fg/85">
               <ArrowLeft className="size-4" />
               На сайт
             </a>
@@ -162,7 +162,7 @@ export function AdminApp() {
                 title="Выйти"
                 className="glass glass-hover ring-focus grid size-10 place-items-center rounded-full"
               >
-                <LogOut className="size-4 text-white/75" />
+                <LogOut className="size-4 text-fg/75" />
               </button>
             )}
           </div>
@@ -187,7 +187,7 @@ function Overview() {
   useEffect(load, [load]);
 
   if (error) return <ErrorBox text={error} onRetry={load} />;
-  if (!stats) return <Centered><Loader2 className="size-6 animate-spin text-white/60" /></Centered>;
+  if (!stats) return <Centered><Loader2 className="size-6 animate-spin text-fg/60" /></Centered>;
 
   const cards: [string, number, string?][] = [
     ['Пользователи', stats.users, `+${nf.format(stats.newUsersWeek)} за неделю`],
@@ -203,17 +203,17 @@ function Overview() {
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight text-white">Обзор</h1>
-        <button onClick={load} className="ring-focus flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-white/65 hover:bg-white/8 hover:text-white">
+        <h1 className="font-display text-3xl font-semibold uppercase tracking-[0.02em] text-fg">Обзор</h1>
+        <button onClick={load} className="ring-focus flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-fg/65 hover:bg-fg/8 hover:text-fg">
           <RefreshCw className="size-3.5" /> Обновить
         </button>
       </div>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {cards.map(([label, value, hint]) => (
           <div key={label} className="glass rounded-3xl p-5">
-            <p className="text-[13px] text-white/55">{label}</p>
-            <p className="mt-2 text-3xl font-semibold tracking-tight text-white tabular-nums">{nf.format(value)}</p>
-            {hint && <p className="mt-1 text-xs text-white/45">{hint}</p>}
+            <p className="text-[13px] text-fg/55">{label}</p>
+            <p className="mt-2 font-display text-4xl font-semibold text-fg tabular-nums">{nf.format(value)}</p>
+            {hint && <p className="mt-1 text-xs text-fg/45">{hint}</p>}
           </div>
         ))}
       </div>
@@ -257,29 +257,29 @@ function UsersTab() {
   return (
     <section>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight text-white">Пользователи</h1>
+        <h1 className="font-display text-3xl font-semibold uppercase tracking-[0.02em] text-fg">Пользователи</h1>
         <label className="glass flex h-10 w-full items-center gap-2 rounded-full px-4 sm:w-72">
-          <Search className="size-4 text-white/45" />
+          <Search className="size-4 text-fg/45" />
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Поиск по email"
             aria-label="Поиск по email"
-            className="w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
+            className="w-full bg-transparent text-sm text-fg placeholder:text-fg/40 focus:outline-none"
           />
         </label>
       </div>
       {error ? (
         <ErrorBox text={error} onRetry={() => load(q)} />
       ) : !users ? (
-        <Centered><Loader2 className="size-6 animate-spin text-white/60" /></Centered>
+        <Centered><Loader2 className="size-6 animate-spin text-fg/60" /></Centered>
       ) : users.length === 0 ? (
-        <p className="glass rounded-3xl p-6 text-sm text-white/60">Пользователей не найдено.</p>
+        <p className="glass rounded-3xl p-6 text-sm text-fg/60">Пользователей не найдено.</p>
       ) : (
         <div className="glass overflow-x-auto rounded-3xl">
           <table className="w-full min-w-[820px] text-sm">
             <thead>
-              <tr className="border-b border-white/8 text-start text-xs uppercase tracking-wider text-white/45">
+              <tr className="border-b border-fg/8 text-start text-xs uppercase tracking-wider text-fg/45">
                 <th className="px-5 py-3 text-start font-medium">Email</th>
                 <th className="px-3 py-3 text-start font-medium">Регистрация</th>
                 <th className="px-3 py-3 text-end font-medium">Запросы 24 ч</th>
@@ -291,23 +291,23 @@ function UsersTab() {
             </thead>
             <tbody>
               {users.map((u) => (
-                <tr key={u.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.03]">
+                <tr key={u.id} className="border-b border-fg/5 last:border-0 hover:bg-fg/[0.03]">
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-2">
-                      <span className="truncate text-white">{u.email ?? '—'}</span>
-                      {u.banned && <span className="rounded-full bg-rose-500/15 px-2 py-0.5 text-[11px] font-medium text-rose-300">заблокирован</span>}
+                      <span className="truncate text-fg">{u.email ?? '—'}</span>
+                      {u.banned && <span className="rounded-full bg-danger/15 px-2 py-0.5 text-[11px] font-medium text-danger">заблокирован</span>}
                     </div>
                   </td>
-                  <td className="px-3 py-3 text-white/60">{fmtDate(u.created_at)}</td>
-                  <td className="px-3 py-3 text-end tabular-nums text-white/80">{nf.format(u.requests_today)}</td>
-                  <td className="px-3 py-3 text-end tabular-nums text-white/80">{nf.format(u.requests_total)}</td>
-                  <td className="px-3 py-3 text-end tabular-nums text-white/80">{nf.format(u.chats)}</td>
-                  <td className="px-3 py-3 text-white/60">{fmtDate(u.last_active)}</td>
+                  <td className="px-3 py-3 text-fg/60">{fmtDate(u.created_at)}</td>
+                  <td className="px-3 py-3 text-end tabular-nums text-fg/80">{nf.format(u.requests_today)}</td>
+                  <td className="px-3 py-3 text-end tabular-nums text-fg/80">{nf.format(u.requests_total)}</td>
+                  <td className="px-3 py-3 text-end tabular-nums text-fg/80">{nf.format(u.chats)}</td>
+                  <td className="px-3 py-3 text-fg/60">{fmtDate(u.last_active)}</td>
                   <td className="px-5 py-3">
                     <div className="flex justify-end gap-1.5">
                       <button
                         onClick={() => setViewing(u)}
-                        className="ring-focus flex h-9 items-center gap-1.5 rounded-xl px-3 text-white/75 hover:bg-white/8 hover:text-white"
+                        className="ring-focus flex h-9 items-center gap-1.5 rounded-xl px-3 text-fg/75 hover:bg-fg/8 hover:text-fg"
                       >
                         <MessageSquare className="size-4" /> Чаты
                       </button>
@@ -315,7 +315,7 @@ function UsersTab() {
                         onClick={() => toggleBan(u)}
                         disabled={busyId === u.id}
                         className={`ring-focus flex h-9 items-center gap-1.5 rounded-xl px-3 disabled:opacity-50 ${
-                          u.banned ? 'text-aqua hover:bg-aqua/10' : 'text-rose-300 hover:bg-rose-500/10'
+                          u.banned ? 'text-gold hover:bg-gold/10' : 'text-danger hover:bg-danger/10'
                         }`}
                       >
                         {busyId === u.id ? <Loader2 className="size-4 animate-spin" /> : <Ban className="size-4" />}
@@ -372,50 +372,50 @@ function ChatViewer({user, onClose}: {user: AdminUser; onClose: () => void}) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6">
       <button aria-label="Закрыть" onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div role="dialog" aria-modal="true" aria-label={`Чаты ${user.email}`} className="glass-strong rise relative flex h-full max-h-[820px] w-full max-w-5xl flex-col overflow-hidden rounded-[28px]">
-        <div className="flex items-center justify-between border-b border-white/8 px-5 py-4">
+        <div className="flex items-center justify-between border-b border-fg/8 px-5 py-4">
           <div className="min-w-0">
-            <p className="text-xs text-white/45">Чаты пользователя</p>
-            <p className="truncate font-medium text-white">{user.email}</p>
+            <p className="text-xs text-fg/45">Чаты пользователя</p>
+            <p className="truncate font-medium text-fg">{user.email}</p>
           </div>
-          <button onClick={onClose} aria-label="Закрыть" className="ring-focus grid size-9 place-items-center rounded-full text-white/60 hover:bg-white/10">
+          <button onClick={onClose} aria-label="Закрыть" className="ring-focus grid size-9 place-items-center rounded-full text-fg/60 hover:bg-fg/10">
             <X className="size-5" />
           </button>
         </div>
         {error ? (
           <div className="p-5"><ErrorBox text={error} /></div>
         ) : !chats ? (
-          <Centered><Loader2 className="size-6 animate-spin text-white/60" /></Centered>
+          <Centered><Loader2 className="size-6 animate-spin text-fg/60" /></Centered>
         ) : chats.length === 0 ? (
-          <p className="p-6 text-sm text-white/55">У пользователя нет сохранённых чатов.</p>
+          <p className="p-6 text-sm text-fg/55">У пользователя нет сохранённых чатов.</p>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-            <ul className="scroll-thin max-h-40 shrink-0 overflow-y-auto border-b border-white/8 p-2 md:max-h-none md:w-64 md:border-b-0 md:border-e">
+            <ul className="scroll-thin max-h-40 shrink-0 overflow-y-auto border-b border-fg/8 p-2 md:max-h-none md:w-64 md:border-b-0 md:border-e">
               {chats.map((c) => (
                 <li key={c.id}>
                   <button
                     onClick={() => setActive(c.id)}
-                    className={`ring-focus w-full rounded-xl px-3 py-2.5 text-start text-sm ${c.id === active ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5'}`}
+                    className={`ring-focus w-full rounded-xl px-3 py-2.5 text-start text-sm ${c.id === active ? 'bg-fg/10 text-fg' : 'text-fg/70 hover:bg-fg/5'}`}
                   >
                     <span className="block truncate">{c.title || 'Без названия'}</span>
-                    <span className="block text-xs text-white/40">{fmtDate(c.updated_at)}</span>
+                    <span className="block text-xs text-fg/40">{fmtDate(c.updated_at)}</span>
                   </button>
                 </li>
               ))}
             </ul>
             <div className="scroll-thin min-h-0 flex-1 space-y-4 overflow-y-auto p-5">
-              {activeChat && <p className="text-sm font-medium text-white/80">{activeChat.title}</p>}
+              {activeChat && <p className="text-sm font-medium text-fg/80">{activeChat.title}</p>}
               {!msgs ? (
-                <Loader2 className="size-5 animate-spin text-white/60" />
+                <Loader2 className="size-5 animate-spin text-fg/60" />
               ) : (
                 msgs.map((m) => (
                   <div key={m.id} className={m.role === 'user' ? 'ms-auto max-w-[85%]' : 'max-w-[95%]'}>
-                    <p className="mb-1 text-[11px] uppercase tracking-wider text-white/40">
+                    <p className="mb-1 text-[11px] uppercase tracking-wider text-fg/40">
                       {m.role === 'user' ? 'Пользователь' : 'ИИ'} · {fmtDate(m.created_at)}
                     </p>
                     {m.role === 'user' ? (
-                      <div className="whitespace-pre-wrap rounded-2xl bg-iris/15 px-4 py-3 text-sm leading-relaxed text-white">{m.content}</div>
+                      <div className="whitespace-pre-wrap rounded-2xl bg-fg/10 px-4 py-3 text-sm leading-relaxed text-fg">{m.content}</div>
                     ) : (
-                      <div className="prose-trip rounded-2xl bg-white/5 px-4 py-3 !text-sm">
+                      <div className="prose-trip rounded-2xl bg-fg/5 px-4 py-3 !text-sm">
                         <Markdown remarkPlugins={[remarkGfm]} skipHtml>
                           {splitRoute(m.content).text}
                         </Markdown>
@@ -463,19 +463,19 @@ function SettingsTab() {
   }
 
   if (error && !settings) return <ErrorBox text={error} />;
-  if (!settings) return <Centered><Loader2 className="size-6 animate-spin text-white/60" /></Centered>;
+  if (!settings) return <Centered><Loader2 className="size-6 animate-spin text-fg/60" /></Centered>;
 
   const parsed = Number(limit);
   const limitValid = limit !== '' && Number.isInteger(parsed) && parsed >= 0 && parsed <= 10000;
 
   return (
     <section className="max-w-2xl space-y-4">
-      <h1 className="text-2xl font-semibold tracking-tight text-white">Настройки ИИ</h1>
+      <h1 className="font-display text-3xl font-semibold uppercase tracking-[0.02em] text-fg">Настройки ИИ</h1>
 
       <div className="glass flex items-center justify-between gap-4 rounded-3xl p-5">
         <div>
-          <p className="font-medium text-white">ИИ-агент включён</p>
-          <p className="mt-1 text-sm text-white/55">
+          <p className="font-medium text-fg">ИИ-агент включён</p>
+          <p className="mt-1 text-sm text-fg/55">
             Выключите, чтобы мгновенно остановить расходы на Claude. Для вас как администратора ИИ продолжит работать.
           </p>
         </div>
@@ -488,9 +488,9 @@ function SettingsTab() {
             if (settings.ai_enabled && !window.confirm('Отключить ИИ для всех пользователей?')) return;
             save({...settings, ai_enabled: !settings.ai_enabled});
           }}
-          className={`ring-focus relative h-8 w-14 shrink-0 rounded-full transition-colors ${settings.ai_enabled ? 'bg-aqua' : 'bg-white/15'}`}
+          className={`ring-focus relative h-8 w-14 shrink-0 rounded-full transition-colors ${settings.ai_enabled ? 'bg-accent' : 'bg-fg/15'}`}
         >
-          <span className={`absolute top-1 size-6 rounded-full bg-white shadow transition-[inset-inline-start] ${settings.ai_enabled ? 'start-7' : 'start-1'}`} />
+          <span className={`absolute top-1 size-6 rounded-full bg-bg shadow transition-[inset-inline-start] ${settings.ai_enabled ? 'start-7' : 'start-1'}`} />
         </button>
       </div>
 
@@ -501,10 +501,10 @@ function SettingsTab() {
           if (limitValid) save({...settings, daily_limit: parsed});
         }}
       >
-        <label htmlFor="limit" className="font-medium text-white">
+        <label htmlFor="limit" className="font-medium text-fg">
           Лимит запросов на пользователя за 24 часа
         </label>
-        <p className="mt-1 text-sm text-white/55">0 — запретить запросы всем, кроме администратора. На вас лимит не действует.</p>
+        <p className="mt-1 text-sm text-fg/55">0 — запретить запросы всем, кроме администратора. На вас лимит не действует.</p>
         <div className="mt-4 flex gap-2">
           <input
             id="limit"
@@ -514,12 +514,12 @@ function SettingsTab() {
             inputMode="numeric"
             value={limit}
             onChange={(e) => setLimit(e.target.value)}
-            className="glass h-11 w-32 rounded-2xl px-4 text-white tabular-nums focus:border-iris/60 focus:outline-none"
+            className="glass h-11 w-32 rounded-2xl px-4 text-fg tabular-nums focus:border-accent/70 focus:outline-none"
           />
           <button
             type="submit"
             disabled={!limitValid || status === 'saving' || parsed === settings.daily_limit}
-            className="bg-accent ring-focus h-11 rounded-2xl px-5 text-sm font-semibold text-ink disabled:opacity-40"
+            className="bg-accent ring-focus h-11 rounded-2xl px-5 text-sm font-semibold text-on-accent disabled:opacity-40"
           >
             Сохранить
           </button>
@@ -527,9 +527,9 @@ function SettingsTab() {
       </form>
 
       <p className="h-5 text-sm" role="status">
-        {status === 'saving' && <span className="text-white/60">Сохраняю…</span>}
-        {status === 'saved' && <span className="text-aqua">Сохранено</span>}
-        {error && <span className="text-rose-300">{error}</span>}
+        {status === 'saving' && <span className="text-fg/60">Сохраняю…</span>}
+        {status === 'saved' && <span className="text-gold">Сохранено</span>}
+        {error && <span className="text-danger">{error}</span>}
       </p>
     </section>
   );
@@ -544,9 +544,9 @@ function Centered({children}: {children: ReactNode}) {
 function Notice({icon, title, text, children}: {icon: ReactNode; title: string; text: string; children?: ReactNode}) {
   return (
     <div className="glass mx-auto mt-[8vh] flex max-w-md flex-col items-center rounded-[28px] p-8 text-center">
-      <div className="grid size-14 place-items-center rounded-2xl bg-white/8 text-aqua [&>svg]:size-7">{icon}</div>
-      <h1 className="mt-4 text-xl font-semibold text-white">{title}</h1>
-      <p className="mt-2 text-sm leading-relaxed text-white/60">{text}</p>
+      <div className="grid size-14 place-items-center rounded-2xl bg-fg/8 text-gold [&>svg]:size-7">{icon}</div>
+      <h1 className="mt-4 text-xl font-semibold text-fg">{title}</h1>
+      <p className="mt-2 text-sm leading-relaxed text-fg/60">{text}</p>
       {children}
     </div>
   );
@@ -554,10 +554,10 @@ function Notice({icon, title, text, children}: {icon: ReactNode; title: string; 
 
 function ErrorBox({text, onRetry}: {text: string; onRetry?: () => void}) {
   return (
-    <div role="alert" className="glass flex flex-wrap items-center gap-3 rounded-2xl border-rose-400/25 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+    <div role="alert" className="glass flex flex-wrap items-center gap-3 rounded-2xl border-danger/25 bg-danger/10 px-4 py-3 text-sm text-danger">
       <span className="flex-1">{text}</span>
       {onRetry && (
-        <button onClick={onRetry} className="ring-focus rounded-full bg-white/10 px-3 py-1.5 font-medium text-white hover:bg-white/15">
+        <button onClick={onRetry} className="ring-focus rounded-full bg-fg/10 px-3 py-1.5 font-medium text-fg hover:bg-fg/15">
           Повторить
         </button>
       )}

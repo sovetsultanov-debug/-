@@ -63,6 +63,10 @@ export type Dict = {
   routeMap: string;
   expandMap: string;
   day: string;
+  statCountries: string;
+  statLanguages: string;
+  statAgent: string;
+  themeToggle: string;
 };
 
 const en: Dict = {
@@ -120,6 +124,10 @@ const en: Dict = {
   routeMap: 'Route map',
   expandMap: 'Expand',
   day: 'Day',
+  statCountries: 'countries',
+  statLanguages: 'languages',
+  statAgent: 'AI agent',
+  themeToggle: 'Switch theme',
 };
 
 const ru: Dict = {
@@ -177,6 +185,10 @@ const ru: Dict = {
   routeMap: 'Карта маршрута',
   expandMap: 'Развернуть',
   day: 'День',
+  statCountries: 'стран',
+  statLanguages: 'языков',
+  statAgent: 'ИИ-агент',
+  themeToggle: 'Сменить тему',
 };
 
 const ky: Dict = {
@@ -234,6 +246,10 @@ const ky: Dict = {
   routeMap: 'Маршрут картасы',
   expandMap: 'Чоңойтуу',
   day: 'Күн',
+  statCountries: 'өлкө',
+  statLanguages: 'тил',
+  statAgent: 'ЖИ-агент',
+  themeToggle: 'Теманы алмаштыруу',
 };
 
 const kk: Dict = {
@@ -291,6 +307,10 @@ const kk: Dict = {
   routeMap: 'Маршрут картасы',
   expandMap: 'Үлкейту',
   day: 'Күн',
+  statCountries: 'ел',
+  statLanguages: 'тіл',
+  statAgent: 'ЖИ-агент',
+  themeToggle: 'Тақырыпты ауыстыру',
 };
 
 const uz: Dict = {
@@ -348,6 +368,10 @@ const uz: Dict = {
   routeMap: 'Marshrut xaritasi',
   expandMap: 'Kattalashtirish',
   day: 'Kun',
+  statCountries: 'davlat',
+  statLanguages: 'til',
+  statAgent: 'SI-agent',
+  themeToggle: 'Mavzuni almashtirish',
 };
 
 const tr: Dict = {
@@ -405,6 +429,10 @@ const tr: Dict = {
   routeMap: 'Rota haritası',
   expandMap: 'Genişlet',
   day: 'Gün',
+  statCountries: 'ülke',
+  statLanguages: 'dil',
+  statAgent: 'YZ asistanı',
+  themeToggle: 'Temayı değiştir',
 };
 
 const zh: Dict = {
@@ -462,6 +490,10 @@ const zh: Dict = {
   routeMap: '路线地图',
   expandMap: '展开',
   day: '第',
+  statCountries: '个国家',
+  statLanguages: '种语言',
+  statAgent: 'AI 助手',
+  themeToggle: '切换主题',
 };
 
 const de: Dict = {
@@ -519,6 +551,10 @@ const de: Dict = {
   routeMap: 'Routenkarte',
   expandMap: 'Vergrößern',
   day: 'Tag',
+  statCountries: 'Länder',
+  statLanguages: 'Sprachen',
+  statAgent: 'KI-Assistent',
+  themeToggle: 'Design wechseln',
 };
 
 const ar: Dict = {
@@ -576,6 +612,10 @@ const ar: Dict = {
   routeMap: 'خريطة المسار',
   expandMap: 'تكبير',
   day: 'اليوم',
+  statCountries: 'دولة',
+  statLanguages: 'لغات',
+  statAgent: 'مساعد ذكي',
+  themeToggle: 'تبديل المظهر',
 };
 
 export const DICTS: Record<Locale, Dict> = {ru, en, ky, kk, uz, tr, zh, de, ar};
