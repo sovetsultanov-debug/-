@@ -292,13 +292,7 @@
   canvas.addEventListener('pointerup', () => (drag = null));
 
   $('download').addEventListener('click', () => {
-    canvas.toBlob((blob) => {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `saiyakat-poster-${Date.now()}.png`;
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-    }, 'image/png');
+    window.showPngResult(canvas, `saiyakat-poster-${Date.now()}.png`);
   });
 
   // Draw once fonts are ready so the script headline renders in the right typeface.

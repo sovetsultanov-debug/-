@@ -128,3 +128,21 @@ label.file:hover span { border-color: var(--accent-hi); }
 .home-card:hover { border-color: var(--accent-hi); }
 .home-card b { font-size: 18px; }
 .home-card span { color: var(--muted); font-size: 14px; }
+
+/* Finished-image overlay */
+.result[hidden] { display: none; }
+.result {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  background: rgb(0 0 0 / 0.82);
+  backdrop-filter: blur(6px);
+}
+.result-card { display: grid; gap: 12px; max-width: min(560px, 100%); max-height: 100%; }
+.result-card img { max-width: 100%; max-height: 72vh; object-fit: contain; border-radius: 12px; justify-self: center; -webkit-touch-callout: default; }
+.result-hint { margin: 0; color: var(--fg); font-size: 14px; text-align: center; }
+.result-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.primary-link { padding: 8px 16px; border-radius: 999px; background: var(--accent); color: var(--fg); text-decoration: none; font-weight: 600; }

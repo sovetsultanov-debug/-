@@ -12,7 +12,7 @@
 </head>
 <body>
   <header class="bar no-print">
-    <a href="index.html">← Студия</a>
+    <a href="./">← Студия</a>
     <b>Планировщик поездки</b>
     <div class="bar-actions">
       <div class="swatches" id="theme">
@@ -23,8 +23,8 @@
         <button type="button" data-lang="en" class="is-active">EN</button>
         <button type="button" data-lang="ru">RU</button>
       </div>
-      <button id="print">Печать / PDF</button>
-      <button id="download" class="primary">Скачать PNG</button>
+      <button id="print" data-print>Печать / PDF</button>
+      <button id="download" class="primary">Готовая картинка</button>
     </div>
   </header>
 
@@ -51,6 +51,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="save.js"></script>
   <script src="planner.js"></script>
 </body>
 </html>

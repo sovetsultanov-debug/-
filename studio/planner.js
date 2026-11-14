@@ -99,20 +99,21 @@
 
   document.getElementById('print').addEventListener('click', () => window.print());
 
-  document.getElementById('download').addEventListener('click', async () => {
+  const download = document.getElementById('download');
+  download.addEventListener('click', async () => {
     if (!window.html2canvas) {
-      alert('Не удалось загрузить html2canvas (нужен интернет). Используйте «Печать / PDF».');
+      download.textContent = 'Нет интернета для картинки';
+      setTimeout(() => (download.textContent = 'Готовая картинка'), 2500);
       return;
     }
-    await document.fonts.ready;
-    const canvas = await window.html2canvas(sheet, {scale: 2, backgroundColor: null, useCORS: true});
-    canvas.toBlob((blob) => {
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `saiyakat-planner-${Date.now()}.png`;
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-    }, 'image/png');
+    download.disabled = true;
+    try {
+      await document.fonts.ready;
+      const canvas = await window.html2canvas(sheet, {scale: 2, backgroundColor: null, useCORS: true});
+      window.showPngResult(canvas, `saiyakat-planner-${Date.now()}.png`);
+    } finally {
+      download.disabled = false;
+    }
   });
 
   build();
