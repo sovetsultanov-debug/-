@@ -8,4 +8,9 @@ export type ChatErrorCode =
   | 'refusal'
   | 'server_error'
   | 'upstream_unavailable'
-  | 'bad_request';
+  | 'bad_request'
+  | 'auth_required'
+  | 'auth_not_configured'
+  | 'banned'
+  | 'daily_limit'
+  | 'ai_disabled';

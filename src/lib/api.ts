@@ -1,4 +1,21 @@
+import {supabase} from './supabase';
 import type {ChatErrorCode, ChatMessage} from './types';
+
+/** fetch() with the signed-in user's access token attached. */
+export async function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  const headers = new Headers(init.headers);
+  if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  const token = supabase ? (await supabase.auth.getSession()).data.session?.access_token : undefined;
+  if (token) headers.set('Authorization', `Bearer ${token}`);
+  return fetch(path, {...init, headers});
+}
+
+export async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await apiFetch(path, init);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error((data as {error?: string}).error ?? `http_${res.status}`);
+  return data as T;
+}
 
 export class ChatError extends Error {
   constructor(public code: ChatErrorCode) {
@@ -15,9 +32,8 @@ export async function streamChat(
 ): Promise<void> {
   let res: Response;
   try {
-    res = await fetch('/api/chat', {
+    res = await apiFetch('/api/chat', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({messages, locale}),
       signal,
     });
@@ -62,7 +78,7 @@ export async function streamChat(
   }
 }
 
-export async function fetchHealth(): Promise<{ai: boolean}> {
+export async function fetchHealth(): Promise<{ai: boolean; auth?: boolean}> {
   try {
     const res = await fetch('/api/health');
     return await res.json();

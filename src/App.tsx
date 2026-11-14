@@ -12,11 +12,13 @@ import {Wordmark} from './components/Logo';
 import {useI18n} from './i18n';
 import type {Dict} from './i18n/locales';
 import {supabase} from './lib/supabase';
-import {ChatError, fetchHealth, streamChat} from './lib/api';
+import {apiJson, ChatError, fetchHealth, streamChat} from './lib/api';
 import * as store from './lib/store';
 import type {ChatErrorCode, ChatMessage, ChatSummary} from './lib/types';
 
 const uid = () => crypto.randomUUID();
+
+const NO_RETRY: ChatErrorCode[] = ['ai_not_configured', 'refusal', 'auth_required', 'auth_not_configured', 'banned', 'daily_limit', 'ai_disabled'];
 
 function errorText(code: ChatErrorCode, t: Dict): string {
   switch (code) {
@@ -28,6 +30,16 @@ function errorText(code: ChatErrorCode, t: Dict): string {
       return t.errOffline;
     case 'refusal':
       return t.errRefusal;
+    case 'auth_required':
+      return t.errAuthRequired;
+    case 'auth_not_configured':
+      return t.authNotConfigured;
+    case 'banned':
+      return t.errBanned;
+    case 'daily_limit':
+      return t.errDailyLimit;
+    case 'ai_disabled':
+      return t.errAiDisabled;
     default:
       return t.errGeneric;
   }
@@ -44,7 +56,9 @@ export default function App() {
   const [streamingId, setStreamingId] = useState<string | null>(null);
   const [error, setError] = useState<{code: ChatErrorCode; retry: (() => void) | null} | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState<false | 'default' | 'chat'>(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const pendingPromptRef = useRef<string | null>(null);
   const [aiReady, setAiReady] = useState(true);
 
   const abortRef = useRef<AbortController | null>(null);
@@ -81,6 +95,27 @@ export default function App() {
     }
     store.listChats().then(setChats).catch((e) => console.warn('listChats', e));
   }, [user, resetConversation]);
+
+  useEffect(() => {
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+    apiJson<{admin: boolean}>('/api/me')
+      .then((r) => setIsAdmin(r.admin))
+      .catch(() => setIsAdmin(false));
+  }, [user]);
+
+  // A prompt typed before signing in is sent right after sign-in succeeds.
+  useEffect(() => {
+    if (user && pendingPromptRef.current) {
+      const prompt = pendingPromptRef.current;
+      pendingPromptRef.current = null;
+      setAuthOpen(false);
+      send(prompt);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   // ---- Auto-scroll while the answer streams ----
   useEffect(() => {
@@ -122,9 +157,9 @@ export default function App() {
       if (!controller.signal.aborted) {
         const code: ChatErrorCode = err instanceof ChatError ? err.code : 'server_error';
         if (!acc) setMessages((prev) => prev.filter((m) => m.id !== assistantId));
-        const canRetry = code !== 'ai_not_configured' && code !== 'refusal';
-        setError({code, retry: canRetry ? () => generate(history, chatId) : null});
+        setError({code, retry: NO_RETRY.includes(code) ? null : () => generate(history, chatId)});
         if (code === 'ai_not_configured') setAiReady(false);
+        if (code === 'auth_required') setAuthOpen('chat');
       }
     } finally {
       if (abortRef.current === controller) abortRef.current = null;
@@ -149,6 +184,16 @@ export default function App() {
   async function send(text: string) {
     const content = text.trim();
     if (!content || streamingId) return;
+    if (!user) {
+      if (!supabase) {
+        setError({code: 'auth_not_configured', retry: null});
+        return;
+      }
+      pendingPromptRef.current = content;
+      setInput(content);
+      setAuthOpen('chat');
+      return;
+    }
     const userMsg: ChatMessage = {id: uid(), role: 'user', content};
     const history = [...messages.filter((m) => m.content), userMsg];
     setMessages(history);
@@ -224,9 +269,10 @@ export default function App() {
         onNew={newTrip}
         onSelect={selectChat}
         onDelete={removeChat}
+        isAdmin={isAdmin}
         onSignIn={() => {
           setSidebarOpen(false);
-          setAuthOpen(true);
+          setAuthOpen('default');
         }}
         onSignOut={() => supabase?.auth.signOut()}
       />
@@ -249,7 +295,7 @@ export default function App() {
             <LanguageMenu />
             {!user && (
               <button
-                onClick={() => setAuthOpen(true)}
+                onClick={() => setAuthOpen('default')}
                 className="glass glass-hover ring-focus flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium text-white lg:hidden"
               >
                 <UserRound className="size-4 text-white/70" />
@@ -291,7 +337,15 @@ export default function App() {
         </div>
       </main>
 
-      {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
+      {authOpen && (
+        <AuthModal
+          reason={authOpen}
+          onClose={() => {
+            setAuthOpen(false);
+            pendingPromptRef.current = null;
+          }}
+        />
+      )}
     </div>
   );
 }

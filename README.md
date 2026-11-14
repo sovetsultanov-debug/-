@@ -4,7 +4,8 @@
 
 - 🌍 **Без языкового барьера**: интерфейс на 9 языках (русский, English, кыргызча, қазақша, oʻzbekcha, Türkçe, 中文, Deutsch, العربية — с RTL), а ИИ отвечает на любом языке.
 - 💬 **Чат с ИИ-агентом**: ответы приходят потоком (SSE), Markdown-разметка, кнопка «Стоп», повтор при ошибке.
-- 🔐 **Аккаунты и история** через Supabase: чаты сохраняются и видны только владельцу (RLS). Без настроек Supabase работает гостевой режим.
+- 🔐 **Аккаунты и история** через Supabase. ИИ-чат доступен только после входа — так ключ Claude защищён от анонимного расхода.
+- 🛡️ **Админ-панель** (`/admin`, только для email из `ADMIN_EMAILS`): статистика, пользователи с блокировкой, просмотр чатов, выключатель ИИ и дневной лимит запросов.
 - ✨ **Дизайн**: тёмная тема в стиле Apple, glassmorphism, «ночное небо над горами», адаптив под iPhone Pro Max (safe-area), `prefers-reduced-motion`.
 
 ## Стек
@@ -35,6 +36,9 @@ npm run dev          # http://localhost:3000
 | Переменная | Где | Зачем |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | сервер (секрет) | ключ Claude. Без него чат показывает «ИИ-агент ещё не подключён» |
+| `SUPABASE_SERVICE_ROLE_KEY` | сервер (секрет!) | проверка входа, лимиты, админка. **Никогда** не добавляйте к нему префикс `VITE_` |
+| `ADMIN_EMAILS` | сервер | email администраторов через запятую (email должен быть подтверждён) |
+| `SUPABASE_URL` | сервер, необязательно | по умолчанию берётся `VITE_SUPABASE_URL` |
 | `ANTHROPIC_MODEL` | сервер, необязательно | модель (по умолчанию `claude-opus-5-5`) |
 | `VITE_SUPABASE_URL` | браузер (публично) | URL проекта Supabase |
 | `VITE_SUPABASE_ANON_KEY` | браузер (публично) | anon-ключ Supabase |
@@ -45,14 +49,16 @@ npm run dev          # http://localhost:3000
 
 1. Создайте проект на [supabase.com](https://supabase.com).
 2. Откройте **SQL Editor** и выполните `supabase/schema.sql`.
-3. **Project Settings → API**: скопируйте URL и `anon` key в `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`.
-4. **Authentication → URL Configuration**: укажите адрес сайта (для писем подтверждения).
+3. **Project Settings → API**: скопируйте URL и `anon` key в `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`, а `service_role` key — в секрет сервера `SUPABASE_SERVICE_ROLE_KEY`.
+4. Зарегистрируйтесь на сайте под своим email, подтвердите его и укажите этот email в `ADMIN_EMAILS`. Админ-панель: `https://ваш-сайт/admin`.
+5. **Authentication → URL Configuration**: укажите адрес сайта (для писем подтверждения).
 
 ## Деплой в Cloud Run
 
 ```bash
 gcloud run deploy saiyakat --source . \
-  --set-secrets ANTHROPIC_API_KEY=anthropic-api-key:latest \
+  --set-secrets ANTHROPIC_API_KEY=anthropic-api-key:latest,SUPABASE_SERVICE_ROLE_KEY=supabase-service-role:latest \
+  --set-env-vars ADMIN_EMAILS=you@example.com \
   --allow-unauthenticated
 ```
 
@@ -60,6 +66,11 @@ gcloud run deploy saiyakat --source . \
 
 ## Безопасность
 
-- Ключ Claude хранится только на сервере, в браузер не попадает.
-- `/api/chat` ограничивает частоту запросов (20 за 5 минут с одного IP), длину и число сообщений.
-- Чаты в Supabase защищены Row Level Security: каждый пользователь видит только свои записи.
+- **Ключи только на сервере.** `ANTHROPIC_API_KEY` и `SUPABASE_SERVICE_ROLE_KEY` не попадают в браузер; храните их в Secret Manager, а не в коде.
+- **ИИ только для вошедших.** `/api/chat` проверяет токен Supabase на сервере; гости получают предложение войти.
+- **Лимиты:** дневной лимит на пользователя (настраивается в админке), плюс защита от всплесков — 15 запросов за 5 минут на пользователя и 30 на IP.
+- **Блокировка** пользователя и **аварийный выключатель ИИ** — в админке. Администратора заблокировать нельзя.
+- **Админ** определяется на сервере: email из `ADMIN_EMAILS` **и** подтверждён в Supabase. Чужой неподтверждённый аккаунт с вашим email доступа не получит.
+- **Row Level Security:** пользователи видят только свои чаты; таблицы лимитов и настроек недоступны из браузера.
+- **HTTP-заголовки:** CSP, HSTS, `X-Frame-Options: DENY`, `nosniff`, Referrer-Policy, Permissions-Policy; запросы к API с чужих сайтов отклоняются.
+- Пользователей предупреждают, что администратор может просматривать чаты для модерации.
