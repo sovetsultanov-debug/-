@@ -6,3 +6,7 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Test photos from the internet: shown locally, never pushed to GitHub.
+# Replace with your own or free stock photos (same file names) before publishing.
+public/photos/*.jpg
