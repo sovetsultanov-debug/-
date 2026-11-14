@@ -38,3 +38,83 @@ create policy "own messages" on public.messages
     user_id = (select auth.uid())
     and exists (select 1 from public.chats c where c.id = chat_id and c.user_id = (select auth.uid()))
   );
+
+-- ---------------------------------------------------------------------------
+-- Profiles, usage log and app settings (admin panel + access control).
+-- These tables are only written by the server with the service-role key;
+-- regular users can read their own profile and nothing else.
+-- ---------------------------------------------------------------------------
+
+create table if not exists public.profiles (
+  id          uuid primary key references auth.users (id) on delete cascade,
+  email       text,
+  banned      boolean not null default false,
+  created_at  timestamptz not null default now()
+);
+
+create table if not exists public.usage_events (
+  id             bigint generated always as identity primary key,
+  user_id        uuid not null references auth.users (id) on delete cascade,
+  input_tokens   integer not null default 0,
+  output_tokens  integer not null default 0,
+  created_at     timestamptz not null default now()
+);
+create index if not exists usage_user_created_idx on public.usage_events (user_id, created_at desc);
+create index if not exists usage_created_idx on public.usage_events (created_at desc);
+
+create table if not exists public.app_settings (
+  id           smallint primary key default 1 check (id = 1),
+  ai_enabled   boolean not null default true,
+  daily_limit  integer not null default 30 check (daily_limit between 0 and 10000),
+  updated_at   timestamptz not null default now()
+);
+insert into public.app_settings (id) values (1) on conflict (id) do nothing;
+
+alter table public.profiles enable row level security;
+alter table public.usage_events enable row level security;
+alter table public.app_settings enable row level security;
+
+drop policy if exists "read own profile" on public.profiles;
+create policy "read own profile" on public.profiles
+  for select to authenticated using (id = (select auth.uid()));
+-- usage_events and app_settings: no policies → only the service role can touch them.
+
+-- Create a profile row for every new user.
+create or replace function public.handle_new_user()
+returns trigger language plpgsql security definer set search_path = '' as $$
+begin
+  insert into public.profiles (id, email) values (new.id, new.email)
+  on conflict (id) do update set email = excluded.email;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert or update of email on auth.users
+  for each row execute function public.handle_new_user();
+
+-- Backfill profiles for users created before this script ran.
+insert into public.profiles (id, email, created_at)
+select id, email, created_at from auth.users
+on conflict (id) do nothing;
+
+-- Per-user stats for the admin panel. Server (service role) only.
+create or replace view public.admin_user_stats with (security_invoker = true) as
+select
+  p.id,
+  p.email,
+  p.banned,
+  p.created_at,
+  count(u.id)                                                         as requests_total,
+  count(u.id) filter (where u.created_at > now() - interval '1 day')  as requests_today,
+  coalesce(sum(u.input_tokens + u.output_tokens), 0)                  as tokens_total,
+  max(u.created_at)                                                   as last_active,
+  (select count(*) from public.chats c where c.user_id = p.id)        as chats
+from public.profiles p
+left join public.usage_events u on u.user_id = p.id
+group by p.id;
+
+revoke all on public.admin_user_stats from anon, authenticated;
+revoke all on public.usage_events from anon, authenticated;
+revoke all on public.app_settings from anon, authenticated;

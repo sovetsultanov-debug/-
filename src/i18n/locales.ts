@@ -54,6 +54,12 @@ export type Dict = {
   authInvalid: string;
   close: string;
   untitled: string;
+  errAuthRequired: string;
+  errBanned: string;
+  errDailyLimit: string;
+  errAiDisabled: string;
+  signInToChat: string;
+  adminPanel: string;
 };
 
 const en: Dict = {
@@ -89,7 +95,7 @@ const en: Dict = {
   retry: 'Try again',
   authTitleIn: 'Welcome back',
   authTitleUp: 'Create account',
-  authSubtitle: 'Your trips are private and saved to your account.',
+  authSubtitle: 'Trips are saved to your account. The site administrator can view chats for moderation.',
   email: 'Email',
   password: 'Password',
   passwordHint: 'At least 6 characters',
@@ -102,6 +108,12 @@ const en: Dict = {
   authInvalid: 'Wrong email or password.',
   close: 'Close',
   untitled: 'New trip',
+  errAuthRequired: 'Sign in to chat with the AI agent — it’s free.',
+  errBanned: 'Your account has been blocked. Contact the site administrator.',
+  errDailyLimit: 'You’ve reached today’s request limit. Come back tomorrow.',
+  errAiDisabled: 'The AI agent is temporarily turned off. Try again later.',
+  signInToChat: 'Sign in to start planning with the AI agent. It’s free.',
+  adminPanel: 'Admin panel',
 };
 
 const ru: Dict = {
@@ -137,7 +149,7 @@ const ru: Dict = {
   retry: 'Повторить',
   authTitleIn: 'С возвращением',
   authTitleUp: 'Создать аккаунт',
-  authSubtitle: 'Ваши поездки видны только вам и сохраняются в аккаунте.',
+  authSubtitle: 'Поездки сохраняются в вашем аккаунте. Администратор сайта может просматривать чаты для модерации.',
   email: 'Email',
   password: 'Пароль',
   passwordHint: 'Не меньше 6 символов',
@@ -150,6 +162,12 @@ const ru: Dict = {
   authInvalid: 'Неверный email или пароль.',
   close: 'Закрыть',
   untitled: 'Новая поездка',
+  errAuthRequired: 'Войдите, чтобы общаться с ИИ-агентом. Это бесплатно.',
+  errBanned: 'Ваш аккаунт заблокирован. Свяжитесь с администратором сайта.',
+  errDailyLimit: 'Дневной лимит запросов исчерпан. Возвращайтесь завтра.',
+  errAiDisabled: 'ИИ-агент временно отключён. Попробуйте позже.',
+  signInToChat: 'Войдите, чтобы планировать поездку с ИИ-агентом. Это бесплатно.',
+  adminPanel: 'Админ-панель',
 };
 
 const ky: Dict = {
@@ -185,7 +203,7 @@ const ky: Dict = {
   retry: 'Кайталоо',
   authTitleIn: 'Кайра кош келиңиз',
   authTitleUp: 'Аккаунт түзүү',
-  authSubtitle: 'Саякаттарыңызды сиз гана көрөсүз, алар аккаунтта сакталат.',
+  authSubtitle: 'Саякаттар аккаунтуңузда сакталат. Сайттын администратору модерация үчүн чаттарды көрө алат.',
   email: 'Email',
   password: 'Сырсөз',
   passwordHint: 'Кеминде 6 белги',
@@ -198,6 +216,12 @@ const ky: Dict = {
   authInvalid: 'Email же сырсөз туура эмес.',
   close: 'Жабуу',
   untitled: 'Жаңы саякат',
+  errAuthRequired: 'ЖИ-агент менен сүйлөшүү үчүн кириңиз. Бул акысыз.',
+  errBanned: 'Аккаунтуңуз бөгөттөлгөн. Сайттын администраторуна кайрылыңыз.',
+  errDailyLimit: 'Бүгүнкү суроо-талаптардын лимити бүттү. Эртең кайтып келиңиз.',
+  errAiDisabled: 'ЖИ-агент убактылуу өчүрүлгөн. Кийинчерээк аракет кылыңыз.',
+  signInToChat: 'ЖИ-агент менен саякат пландоо үчүн кириңиз. Бул акысыз.',
+  adminPanel: 'Админ-панель',
 };
 
 const kk: Dict = {
@@ -233,7 +257,7 @@ const kk: Dict = {
   retry: 'Қайталау',
   authTitleIn: 'Қайта қош келдіңіз',
   authTitleUp: 'Тіркелу',
-  authSubtitle: 'Саяхаттарыңызды тек сіз көресіз, олар аккаунтта сақталады.',
+  authSubtitle: 'Саяхаттар аккаунтыңызда сақталады. Сайт әкімшісі модерация үшін чаттарды көре алады.',
   email: 'Email',
   password: 'Құпиясөз',
   passwordHint: 'Кемінде 6 таңба',
@@ -246,6 +270,12 @@ const kk: Dict = {
   authInvalid: 'Email немесе құпиясөз қате.',
   close: 'Жабу',
   untitled: 'Жаңа саяхат',
+  errAuthRequired: 'ЖИ-агентпен сөйлесу үшін кіріңіз. Бұл тегін.',
+  errBanned: 'Аккаунтыңыз бұғатталған. Сайт әкімшісіне хабарласыңыз.',
+  errDailyLimit: 'Бүгінгі сұраныс лимиті бітті. Ертең оралыңыз.',
+  errAiDisabled: 'ЖИ-агент уақытша өшірілген. Кейінірек қайталап көріңіз.',
+  signInToChat: 'ЖИ-агентпен саяхат жоспарлау үшін кіріңіз. Бұл тегін.',
+  adminPanel: 'Әкімші панелі',
 };
 
 const uz: Dict = {
@@ -281,7 +311,7 @@ const uz: Dict = {
   retry: 'Qayta urinish',
   authTitleIn: 'Xush kelibsiz',
   authTitleUp: 'Akkaunt yaratish',
-  authSubtitle: 'Sayohatlaringizni faqat siz koʻrasiz, ular akkauntda saqlanadi.',
+  authSubtitle: 'Sayohatlar akkauntingizda saqlanadi. Sayt administratori moderatsiya uchun chatlarni koʻrishi mumkin.',
   email: 'Email',
   password: 'Parol',
   passwordHint: 'Kamida 6 ta belgi',
@@ -294,6 +324,12 @@ const uz: Dict = {
   authInvalid: 'Email yoki parol notoʻgʻri.',
   close: 'Yopish',
   untitled: 'Yangi sayohat',
+  errAuthRequired: 'SI-agent bilan suhbatlashish uchun kiring. Bu bepul.',
+  errBanned: 'Akkauntingiz bloklangan. Sayt administratoriga murojaat qiling.',
+  errDailyLimit: 'Bugungi soʻrovlar limiti tugadi. Ertaga qayting.',
+  errAiDisabled: 'SI-agent vaqtincha oʻchirilgan. Keyinroq urinib koʻring.',
+  signInToChat: 'SI-agent bilan sayohat rejalashtirish uchun kiring. Bu bepul.',
+  adminPanel: 'Admin panel',
 };
 
 const tr: Dict = {
@@ -329,7 +365,7 @@ const tr: Dict = {
   retry: 'Tekrar dene',
   authTitleIn: 'Tekrar hoş geldiniz',
   authTitleUp: 'Hesap oluştur',
-  authSubtitle: 'Seyahatleriniz gizlidir ve hesabınıza kaydedilir.',
+  authSubtitle: 'Seyahatler hesabınıza kaydedilir. Site yöneticisi denetim amacıyla sohbetleri görebilir.',
   email: 'E-posta',
   password: 'Şifre',
   passwordHint: 'En az 6 karakter',
@@ -342,6 +378,12 @@ const tr: Dict = {
   authInvalid: 'E-posta veya şifre yanlış.',
   close: 'Kapat',
   untitled: 'Yeni seyahat',
+  errAuthRequired: 'Yapay zekâ asistanıyla sohbet etmek için giriş yapın. Ücretsiz.',
+  errBanned: 'Hesabınız engellendi. Site yöneticisiyle iletişime geçin.',
+  errDailyLimit: 'Bugünkü istek sınırına ulaştınız. Yarın tekrar gelin.',
+  errAiDisabled: 'Yapay zekâ asistanı geçici olarak kapalı. Daha sonra tekrar deneyin.',
+  signInToChat: 'Yapay zekâ asistanıyla plan yapmak için giriş yapın. Ücretsiz.',
+  adminPanel: 'Yönetim paneli',
 };
 
 const zh: Dict = {
@@ -377,7 +419,7 @@ const zh: Dict = {
   retry: '重试',
   authTitleIn: '欢迎回来',
   authTitleUp: '创建账户',
-  authSubtitle: '你的行程仅自己可见，并保存在账户中。',
+  authSubtitle: '行程保存在你的账户中。网站管理员可能会出于审核目的查看对话。',
   email: '邮箱',
   password: '密码',
   passwordHint: '至少 6 个字符',
@@ -390,6 +432,12 @@ const zh: Dict = {
   authInvalid: '邮箱或密码错误。',
   close: '关闭',
   untitled: '新行程',
+  errAuthRequired: '登录后即可与 AI 助手对话，完全免费。',
+  errBanned: '你的账户已被封禁，请联系网站管理员。',
+  errDailyLimit: '今日请求次数已用完，请明天再来。',
+  errAiDisabled: 'AI 助手暂时关闭，请稍后再试。',
+  signInToChat: '登录即可与 AI 助手一起规划行程，完全免费。',
+  adminPanel: '管理后台',
 };
 
 const de: Dict = {
@@ -425,7 +473,7 @@ const de: Dict = {
   retry: 'Erneut versuchen',
   authTitleIn: 'Willkommen zurück',
   authTitleUp: 'Konto erstellen',
-  authSubtitle: 'Deine Reisen sind privat und werden in deinem Konto gespeichert.',
+  authSubtitle: 'Reisen werden in deinem Konto gespeichert. Der Seitenbetreiber kann Chats zur Moderation einsehen.',
   email: 'E-Mail',
   password: 'Passwort',
   passwordHint: 'Mindestens 6 Zeichen',
@@ -438,6 +486,12 @@ const de: Dict = {
   authInvalid: 'E-Mail oder Passwort ist falsch.',
   close: 'Schließen',
   untitled: 'Neue Reise',
+  errAuthRequired: 'Melde dich an, um mit dem KI-Assistenten zu chatten – kostenlos.',
+  errBanned: 'Dein Konto wurde gesperrt. Wende dich an den Seitenbetreiber.',
+  errDailyLimit: 'Du hast dein Tageslimit erreicht. Komm morgen wieder.',
+  errAiDisabled: 'Der KI-Assistent ist vorübergehend deaktiviert. Versuch es später erneut.',
+  signInToChat: 'Melde dich an, um mit dem KI-Assistenten zu planen. Kostenlos.',
+  adminPanel: 'Admin-Bereich',
 };
 
 const ar: Dict = {
@@ -473,7 +527,7 @@ const ar: Dict = {
   retry: 'إعادة المحاولة',
   authTitleIn: 'مرحبًا بعودتك',
   authTitleUp: 'إنشاء حساب',
-  authSubtitle: 'رحلاتك خاصة ومحفوظة في حسابك.',
+  authSubtitle: 'تُحفظ رحلاتك في حسابك. يمكن لمسؤول الموقع الاطلاع على المحادثات لأغراض الإشراف.',
   email: 'البريد الإلكتروني',
   password: 'كلمة المرور',
   passwordHint: '6 أحرف على الأقل',
@@ -486,6 +540,12 @@ const ar: Dict = {
   authInvalid: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
   close: 'إغلاق',
   untitled: 'رحلة جديدة',
+  errAuthRequired: 'سجّل الدخول للتحدث مع المساعد الذكي، مجانًا.',
+  errBanned: 'تم حظر حسابك. تواصل مع مسؤول الموقع.',
+  errDailyLimit: 'لقد بلغت حد الطلبات لهذا اليوم. عد غدًا.',
+  errAiDisabled: 'المساعد الذكي متوقف مؤقتًا. حاول لاحقًا.',
+  signInToChat: 'سجّل الدخول لتخطط رحلتك مع المساعد الذكي، مجانًا.',
+  adminPanel: 'لوحة الإدارة',
 };
 
 export const DICTS: Record<Locale, Dict> = {ru, en, ky, kk, uz, tr, zh, de, ar};

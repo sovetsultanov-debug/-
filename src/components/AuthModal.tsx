@@ -4,7 +4,7 @@ import {supabase} from '../lib/supabase';
 import {useI18n} from '../i18n';
 import {LogoMark} from './Logo';
 
-export function AuthModal({onClose}: {onClose: () => void}) {
+export function AuthModal({onClose, reason = 'default'}: {onClose: () => void; reason?: 'default' | 'chat'}) {
   const {t} = useI18n();
   const [mode, setMode] = useState<'in' | 'up'>('in');
   const [email, setEmail] = useState('');
@@ -73,7 +73,8 @@ export function AuthModal({onClose}: {onClose: () => void}) {
           <h2 id="auth-title" className="mt-4 text-2xl font-semibold tracking-tight text-white">
             {title}
           </h2>
-          <p className="mt-1.5 text-sm text-white/55">{t.authSubtitle}</p>
+          {reason === 'chat' && <p className="mt-2 text-[15px] font-medium text-aqua">{t.signInToChat}</p>}
+          <p className="mt-1.5 text-sm leading-relaxed text-white/55">{t.authSubtitle}</p>
         </div>
 
         {!supabase ? (

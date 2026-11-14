@@ -3,6 +3,9 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import express, {type Request, type Response} from 'express';
 import Anthropic from '@anthropic-ai/sdk';
+import {db, getSettings, requireUser, supabaseUrl, type AuthedRequest} from './server/auth';
+import {adminRouter} from './server/admin';
+import {createRateLimiter, sameOriginOnly, securityHeaders} from './server/security';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const isProd = process.env.NODE_ENV === 'production';
@@ -34,16 +37,9 @@ const LANG_NAMES: Record<string, string> = {
 const MAX_MESSAGES = 40;
 const MAX_CHARS = 8000;
 
-// Very small in-memory rate limiter: 20 requests / 5 min per IP.
-const hits = new Map<string, number[]>();
-function rateLimited(ip: string): boolean {
-  const now = Date.now();
-  const windowMs = 5 * 60_000;
-  const list = (hits.get(ip) ?? []).filter((t) => now - t < windowMs);
-  list.push(now);
-  hits.set(ip, list);
-  return list.length > 20;
-}
+// Burst protection on top of the per-user daily limit.
+const ipLimited = createRateLimiter(30, 5 * 60_000);
+const userLimited = createRateLimiter(15, 5 * 60_000);
 
 type ChatBody = {messages?: unknown; locale?: unknown};
 
@@ -66,20 +62,66 @@ function parseMessages(raw: unknown): Anthropic.Beta.BetaMessageParam[] | null {
 
 const app = express();
 app.disable('x-powered-by');
-app.set('trust proxy', true);
-app.use(express.json({limit: '200kb'}));
+app.set('trust proxy', 1); // Cloud Run: exactly one proxy hop; don't trust client-supplied X-Forwarded-For
+app.use(securityHeaders(isProd, supabaseUrl));
+app.use('/api', express.json({limit: '200kb'}), sameOriginOnly);
 
 app.get('/api/health', (_req, res) => {
-  res.json({ok: true, ai: Boolean(anthropic)});
+  res.json({ok: true, ai: Boolean(anthropic), auth: Boolean(db)});
 });
 
-app.post('/api/chat', async (req: Request, res: Response) => {
+app.get('/api/me', requireUser, (req, res) => {
+  res.json({admin: (req as AuthedRequest).isAdmin});
+});
+
+app.use('/api/admin', adminRouter);
+
+app.post('/api/chat', requireUser, async (req: Request, res: Response) => {
+  const {user, isAdmin} = req as AuthedRequest;
   if (!anthropic) {
     res.status(503).json({error: 'ai_not_configured'});
     return;
   }
-  if (rateLimited(req.ip ?? 'unknown')) {
+  if (ipLimited(req.ip ?? 'unknown') || userLimited(user.id)) {
     res.status(429).json({error: 'rate_limited'});
+    return;
+  }
+
+  let usageId: number | null = null;
+  try {
+    const [settings, profile] = await Promise.all([
+      getSettings(),
+      db!.from('profiles').select('banned').eq('id', user.id).maybeSingle(),
+    ]);
+    if (profile.error) throw profile.error;
+    if (profile.data?.banned) {
+      res.status(403).json({error: 'banned'});
+      return;
+    }
+    if (!settings.ai_enabled && !isAdmin) {
+      res.status(503).json({error: 'ai_disabled'});
+      return;
+    }
+    if (!isAdmin) {
+      const since = new Date(Date.now() - 864e5).toISOString();
+      const {count, error} = await db!
+        .from('usage_events')
+        .select('*', {count: 'exact', head: true})
+        .eq('user_id', user.id)
+        .gte('created_at', since);
+      if (error) throw error;
+      if ((count ?? 0) >= settings.daily_limit) {
+        res.status(429).json({error: 'daily_limit'});
+        return;
+      }
+    }
+    // Record the request up front so aborted streams still count toward the limit.
+    const ins = await db!.from('usage_events').insert({user_id: user.id}).select('id').single();
+    if (ins.error) throw ins.error;
+    usageId = ins.data.id;
+  } catch (err) {
+    console.error('[chat:precheck]', err);
+    res.status(503).json({error: 'server_error'});
     return;
   }
   const body = req.body as ChatBody;
@@ -128,6 +170,17 @@ app.post('/api/chat', async (req: Request, res: Response) => {
       }
     }
     const final = await stream.finalMessage();
+    if (usageId !== null) {
+      const u = final.usage;
+      db!
+        .from('usage_events')
+        .update({
+          input_tokens: u.input_tokens + (u.cache_read_input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0),
+          output_tokens: u.output_tokens,
+        })
+        .eq('id', usageId)
+        .then(({error}) => error && console.error('[usage]', error));
+    }
     if (final.stop_reason === 'refusal') send('error', {error: 'refusal'});
     send('done', {stop: final.stop_reason});
   } catch (err) {

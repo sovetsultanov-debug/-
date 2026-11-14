@@ -1,4 +1,4 @@
-import {LogOut, MessageSquare, Plus, Trash2, UserRound, X} from 'lucide-react';
+import {LogOut, MessageSquare, Plus, ShieldCheck, Trash2, UserRound, X} from 'lucide-react';
 import type {User} from '@supabase/supabase-js';
 import type {ChatSummary} from '../lib/types';
 import {useI18n} from '../i18n';
@@ -15,9 +15,10 @@ type Props = {
   onDelete: (id: string) => void;
   onSignIn: () => void;
   onSignOut: () => void;
+  isAdmin: boolean;
 };
 
-export function Sidebar({open, onClose, user, chats, activeId, onNew, onSelect, onDelete, onSignIn, onSignOut}: Props) {
+export function Sidebar({open, onClose, user, chats, activeId, onNew, onSelect, onDelete, onSignIn, onSignOut, isAdmin}: Props) {
   const {t} = useI18n();
 
   return (
@@ -91,6 +92,15 @@ export function Sidebar({open, onClose, user, chats, activeId, onNew, onSelect, 
         </nav>
 
         <div className="mt-2 border-t border-white/8 pt-3">
+          {isAdmin && (
+            <a
+              href="/admin"
+              className="ring-focus mb-1 flex h-10 items-center gap-2.5 rounded-xl px-3 text-sm font-medium text-aqua transition-colors hover:bg-white/8"
+            >
+              <ShieldCheck className="size-4" />
+              {t.adminPanel}
+            </a>
+          )}
           {user ? (
             <div className="flex items-center gap-3 rounded-2xl px-2 py-1.5">
               <div className="bg-accent grid size-9 shrink-0 place-items-center rounded-full text-sm font-semibold text-ink">
