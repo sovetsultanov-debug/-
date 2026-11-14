@@ -1,7 +1,7 @@
 import {useEffect, useState, type ReactNode} from 'react';
 
 /** Portrait (4:5) photos in public/photos/. Missing files are skipped automatically. */
-export const HERO_PHOTOS = ['/photos/hero-1.jpg', '/photos/hero-2.jpg', '/photos/hero-3.jpg', '/photos/hero-4.jpg'];
+export const HERO_PHOTOS = ['/photos/hero-1.jpg', '/photos/hero-2.jpg', '/photos/hero-3.jpg', '/photos/hero-4.jpg', '/photos/hero-5.jpg'];
 const SLIDE_MS = 6500;
 
 function PhotoSlider() {
