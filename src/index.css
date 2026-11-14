@@ -1,1 +1,187 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI",
+    "Noto Sans", "Noto Sans Arabic", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --color-ink: #05060b;
+  --color-aqua: #5eead4;
+  --color-iris: #818cf8;
+  --color-sun: #fcd34d;
+}
+
+:root {
+  color-scheme: dark;
+  --glass-bg: linear-gradient(180deg, rgb(255 255 255 / 0.085), rgb(255 255 255 / 0.035));
+  --glass-border: rgb(255 255 255 / 0.11);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.12), inset 0 -1px 0 rgb(255 255 255 / 0.03);
+  --accent: linear-gradient(135deg, #5eead4 0%, #818cf8 55%, #c084fc 100%);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink);
+  color: rgb(255 255 255 / 0.92);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+::selection {
+  background: rgb(129 140 248 / 0.4);
+}
+
+/* ---------- Glass ---------- */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight), 0 24px 60px -24px rgb(0 0 0 / 0.65);
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+}
+
+.glass-strong {
+  background: linear-gradient(180deg, rgb(22 24 38 / 0.82), rgb(12 13 22 / 0.78));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight), 0 30px 80px -20px rgb(0 0 0 / 0.75);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+.glass-hover {
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.glass-hover:hover {
+  background-color: rgb(255 255 255 / 0.05);
+  border-color: rgb(255 255 255 / 0.18);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #ffffff 10%, #c7d2fe 45%, #99f6e4 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-accent {
+  background: var(--accent);
+}
+
+.ring-focus:focus-visible {
+  outline: 2px solid rgb(129 140 248 / 0.9);
+  outline-offset: 2px;
+}
+
+/* ---------- Aurora background ---------- */
+.aurora {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.55;
+  will-change: transform;
+}
+@keyframes drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6vw, 4vh, 0) scale(1.12); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50% { transform: translate3d(-5vw, -3vh, 0) scale(0.95); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.9; }
+}
+.drift-a { animation: drift-a 22s ease-in-out infinite; }
+.drift-b { animation: drift-b 28s ease-in-out infinite; }
+.star { animation: twinkle 4s ease-in-out infinite; }
+
+/* ---------- Motion ---------- */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes dot {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.typing-dot { animation: dot 1.2s ease-in-out infinite; }
+
+@keyframes caret {
+  50% { opacity: 0; }
+}
+.stream-caret::after {
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-inline-start: 2px;
+  vertical-align: -0.15em;
+  border-radius: 2px;
+  background: var(--accent);
+  animation: caret 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drift-a, .drift-b, .star, .rise, .typing-dot, .stream-caret::after { animation: none !important; }
+}
+
+/* ---------- Scrollbars ---------- */
+.scroll-thin { scrollbar-width: thin; scrollbar-color: rgb(255 255 255 / 0.15) transparent; }
+.scroll-thin::-webkit-scrollbar { width: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: rgb(255 255 255 / 0.12); border-radius: 8px; }
+
+/* ---------- Markdown answer ---------- */
+.prose-trip { line-height: 1.7; font-size: 15.5px; color: rgb(255 255 255 / 0.86); overflow-wrap: anywhere; }
+.prose-trip > * + * { margin-top: 0.75em; }
+.prose-trip h1, .prose-trip h2, .prose-trip h3 {
+  color: #fff;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin-top: 1.4em;
+}
+.prose-trip h1 { font-size: 1.35em; }
+.prose-trip h2 { font-size: 1.2em; }
+.prose-trip h3 { font-size: 1.05em; }
+.prose-trip > :first-child { margin-top: 0; }
+.prose-trip strong { color: #fff; font-weight: 600; }
+.prose-trip a { color: #99f6e4; text-decoration: underline; text-underline-offset: 3px; }
+.prose-trip ul, .prose-trip ol { padding-inline-start: 1.3em; }
+.prose-trip ul { list-style: disc; }
+.prose-trip ol { list-style: decimal; }
+.prose-trip li + li { margin-top: 0.3em; }
+.prose-trip li::marker { color: rgb(153 246 228 / 0.7); }
+.prose-trip hr { border: 0; height: 1px; background: rgb(255 255 255 / 0.1); margin: 1.5em 0; }
+.prose-trip blockquote {
+  border-inline-start: 3px solid rgb(129 140 248 / 0.6);
+  padding-inline-start: 1em;
+  color: rgb(255 255 255 / 0.7);
+}
+.prose-trip code {
+  font-size: 0.88em;
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 0.08);
+}
+.prose-trip table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+.prose-trip th, .prose-trip td {
+  border: 1px solid rgb(255 255 255 / 0.1);
+  padding: 0.45em 0.75em;
+  text-align: start;
+}
+.prose-trip th { background: rgb(255 255 255 / 0.05); color: #fff; font-weight: 600; }
