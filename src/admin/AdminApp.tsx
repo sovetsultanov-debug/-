@@ -22,6 +22,7 @@ import {AuthModal} from '../components/AuthModal';
 import {Wordmark} from '../components/Logo';
 import {supabase} from '../lib/supabase';
 import {apiJson} from '../lib/api';
+import {splitRoute} from '../lib/route';
 
 type Stats = {
   users: number;
@@ -416,7 +417,7 @@ function ChatViewer({user, onClose}: {user: AdminUser; onClose: () => void}) {
                     ) : (
                       <div className="prose-trip rounded-2xl bg-white/5 px-4 py-3 !text-sm">
                         <Markdown remarkPlugins={[remarkGfm]} skipHtml>
-                          {m.content}
+                          {splitRoute(m.content).text}
                         </Markdown>
                       </div>
                     )}

@@ -8,7 +8,7 @@ export function securityHeaders(isProd: boolean, supabaseUrl: string | undefined
     "default-src 'self'",
     "script-src 'self'",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data:",
+    "img-src 'self' data: https://*.basemaps.cartocdn.com",
     "font-src 'self' data:",
     `connect-src 'self' ${supabaseOrigin} ${supabaseWs}`.trim(),
     "frame-ancestors 'none'",

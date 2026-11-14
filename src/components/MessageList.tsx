@@ -1,9 +1,13 @@
+import {lazy, Suspense} from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {RotateCcw} from 'lucide-react';
 import type {ChatMessage} from '../lib/types';
 import {useI18n} from '../i18n';
 import {LogoMark} from './Logo';
+import {splitRoute} from '../lib/route';
+
+const RouteMap = lazy(() => import('./RouteMap'));
 
 type Props = {
   messages: ChatMessage[];
@@ -24,36 +28,7 @@ export function MessageList({messages, streamingId, error, onRetry}: Props) {
             </div>
           </div>
         ) : (
-          <div key={m.id} className="rise flex gap-3.5">
-            <div className="mt-0.5 shrink-0">
-              <LogoMark size={30} />
-            </div>
-            <div className="min-w-0 flex-1">
-              {m.content ? (
-                <div className={`prose-trip ${m.id === streamingId ? 'stream-caret' : ''}`}>
-                  <Markdown
-                    remarkPlugins={[remarkGfm]}
-                    components={{a: ({node: _node, ...props}) => <a {...props} target="_blank" rel="noreferrer" />}}
-                  >
-                    {m.content}
-                  </Markdown>
-                </div>
-              ) : (
-                <div className="flex h-8 items-center gap-3 text-sm text-white/55" role="status">
-                  <span className="flex gap-1">
-                    {[0, 1, 2].map((i) => (
-                      <span
-                        key={i}
-                        className="typing-dot size-1.5 rounded-full bg-aqua"
-                        style={{animationDelay: `${i * 0.15}s`}}
-                      />
-                    ))}
-                  </span>
-                  {t.thinking}
-                </div>
-              )}
-            </div>
-          </div>
+          <AssistantMessage key={m.id} message={m} streaming={m.id === streamingId} />
         ),
       )}
       {error && (
@@ -70,6 +45,44 @@ export function MessageList({messages, streamingId, error, onRetry}: Props) {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+function AssistantMessage({message, streaming}: {message: ChatMessage; streaming: boolean}) {
+  const {t} = useI18n();
+  const {text, route} = splitRoute(message.content);
+  return (
+    <div className="rise flex gap-3.5">
+      <div className="mt-0.5 shrink-0">
+        <LogoMark size={30} />
+      </div>
+      <div className="min-w-0 flex-1">
+        {text ? (
+          <div className={`prose-trip ${streaming ? 'stream-caret' : ''}`}>
+            <Markdown
+              remarkPlugins={[remarkGfm]}
+              components={{a: ({node: _node, ...props}) => <a {...props} target="_blank" rel="noreferrer" />}}
+            >
+              {text}
+            </Markdown>
+          </div>
+        ) : (
+          <div className="flex h-8 items-center gap-3 text-sm text-white/55" role="status">
+            <span className="flex gap-1">
+              {[0, 1, 2].map((i) => (
+                <span key={i} className="typing-dot size-1.5 rounded-full bg-aqua" style={{animationDelay: `${i * 0.15}s`}} />
+              ))}
+            </span>
+            {t.thinking}
+          </div>
+        )}
+        {route && !streaming && (
+          <Suspense fallback={<div className="glass mt-4 h-[340px] animate-pulse rounded-[24px]" />}>
+            <RouteMap route={route} />
+          </Suspense>
+        )}
+      </div>
     </div>
   );
 }

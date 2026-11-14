@@ -60,6 +60,9 @@ export type Dict = {
   errAiDisabled: string;
   signInToChat: string;
   adminPanel: string;
+  routeMap: string;
+  expandMap: string;
+  day: string;
 };
 
 const en: Dict = {
@@ -114,6 +117,9 @@ const en: Dict = {
   errAiDisabled: 'The AI agent is temporarily turned off. Try again later.',
   signInToChat: 'Sign in to start planning with the AI agent. It’s free.',
   adminPanel: 'Admin panel',
+  routeMap: 'Route map',
+  expandMap: 'Expand',
+  day: 'Day',
 };
 
 const ru: Dict = {
@@ -168,6 +174,9 @@ const ru: Dict = {
   errAiDisabled: 'ИИ-агент временно отключён. Попробуйте позже.',
   signInToChat: 'Войдите, чтобы планировать поездку с ИИ-агентом. Это бесплатно.',
   adminPanel: 'Админ-панель',
+  routeMap: 'Карта маршрута',
+  expandMap: 'Развернуть',
+  day: 'День',
 };
 
 const ky: Dict = {
@@ -222,6 +231,9 @@ const ky: Dict = {
   errAiDisabled: 'ЖИ-агент убактылуу өчүрүлгөн. Кийинчерээк аракет кылыңыз.',
   signInToChat: 'ЖИ-агент менен саякат пландоо үчүн кириңиз. Бул акысыз.',
   adminPanel: 'Админ-панель',
+  routeMap: 'Маршрут картасы',
+  expandMap: 'Чоңойтуу',
+  day: 'Күн',
 };
 
 const kk: Dict = {
@@ -276,6 +288,9 @@ const kk: Dict = {
   errAiDisabled: 'ЖИ-агент уақытша өшірілген. Кейінірек қайталап көріңіз.',
   signInToChat: 'ЖИ-агентпен саяхат жоспарлау үшін кіріңіз. Бұл тегін.',
   adminPanel: 'Әкімші панелі',
+  routeMap: 'Маршрут картасы',
+  expandMap: 'Үлкейту',
+  day: 'Күн',
 };
 
 const uz: Dict = {
@@ -330,6 +345,9 @@ const uz: Dict = {
   errAiDisabled: 'SI-agent vaqtincha oʻchirilgan. Keyinroq urinib koʻring.',
   signInToChat: 'SI-agent bilan sayohat rejalashtirish uchun kiring. Bu bepul.',
   adminPanel: 'Admin panel',
+  routeMap: 'Marshrut xaritasi',
+  expandMap: 'Kattalashtirish',
+  day: 'Kun',
 };
 
 const tr: Dict = {
@@ -384,6 +402,9 @@ const tr: Dict = {
   errAiDisabled: 'Yapay zekâ asistanı geçici olarak kapalı. Daha sonra tekrar deneyin.',
   signInToChat: 'Yapay zekâ asistanıyla plan yapmak için giriş yapın. Ücretsiz.',
   adminPanel: 'Yönetim paneli',
+  routeMap: 'Rota haritası',
+  expandMap: 'Genişlet',
+  day: 'Gün',
 };
 
 const zh: Dict = {
@@ -438,6 +459,9 @@ const zh: Dict = {
   errAiDisabled: 'AI 助手暂时关闭，请稍后再试。',
   signInToChat: '登录即可与 AI 助手一起规划行程，完全免费。',
   adminPanel: '管理后台',
+  routeMap: '路线地图',
+  expandMap: '展开',
+  day: '第',
 };
 
 const de: Dict = {
@@ -492,6 +516,9 @@ const de: Dict = {
   errAiDisabled: 'Der KI-Assistent ist vorübergehend deaktiviert. Versuch es später erneut.',
   signInToChat: 'Melde dich an, um mit dem KI-Assistenten zu planen. Kostenlos.',
   adminPanel: 'Admin-Bereich',
+  routeMap: 'Routenkarte',
+  expandMap: 'Vergrößern',
+  day: 'Tag',
 };
 
 const ar: Dict = {
@@ -546,6 +573,9 @@ const ar: Dict = {
   errAiDisabled: 'المساعد الذكي متوقف مؤقتًا. حاول لاحقًا.',
   signInToChat: 'سجّل الدخول لتخطط رحلتك مع المساعد الذكي، مجانًا.',
   adminPanel: 'لوحة الإدارة',
+  routeMap: 'خريطة المسار',
+  expandMap: 'تكبير',
+  day: 'اليوم',
 };
 
 export const DICTS: Record<Locale, Dict> = {ru, en, ky, kk, uz, tr, zh, de, ar};
