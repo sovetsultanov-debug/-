@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Постер-приглашение — Saiyakat Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Marck+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="studio.css" />
+</head>
+<body>
+  <header class="bar">
+    <a href="index.html">← Студия</a>
+    <b>Постер-приглашение</b>
+    <button id="download" class="primary">Скачать PNG</button>
+  </header>
+
+  <div class="layout">
+    <section class="stage">
+      <!-- The poster is drawn on this canvas at full 1080×1350 resolution; CSS only scales it down for preview. -->
+      <canvas id="poster" width="1080" height="1350" aria-label="Предпросмотр постера"></canvas>
+      <p class="hint">Перетащите фото мышкой или пальцем, чтобы выбрать кадр.</p>
+    </section>
+
+    <form class="panel" id="controls" autocomplete="off">
+      <fieldset>
+        <legend>Фото</legend>
+        <label class="file">
+          <input type="file" id="photo" accept="image/*" />
+          <span>Загрузить своё фото</span>
+        </label>
+        <label>Масштаб <input type="range" id="zoom" min="1" max="2.5" step="0.01" value="1" /></label>
+        <label>Затемнение снизу <input type="range" id="shade" min="0" max="1" step="0.01" value="0.75" /></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Плашки сверху</legend>
+        <label>Слева (бренд) <input type="text" id="brand" value="SAIYAKAT" /></label>
+        <label>Справа (кнопка) <input type="text" id="cta" value="ТУР НА ИССЫК-КУЛЬ" /></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Метка места</legend>
+        <label>Название <input type="text" id="place" value="Иссык-Куль" /></label>
+        <label class="check"><input type="checkbox" id="route" checked /> Линия маршрута</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Текст</legend>
+        <label>Строка сверху <input type="text" id="lead" value="продлите это лето на" /></label>
+        <label>Рукописный заголовок <input type="text" id="title" value="Иссык-Куле" /></label>
+        <label>Текст, строка 1 <input type="text" id="body1" value="приглашаем в большое сентябрьское" /></label>
+        <label>Текст, строка 2 <input type="text" id="body2" value="путешествие в горы Тянь-Шаня" /></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Цвета</legend>
+        <div class="swatches" id="palette">
+          <button type="button" data-palette="earth" class="is-active">Земля</button>
+          <button type="button" data-palette="saiyakat">Saiyakat</button>
+          <button type="button" data-palette="night">Ночь</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <script src="poster.js"></script>
+</body>
+</html>
